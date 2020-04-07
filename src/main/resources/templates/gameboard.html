@@ -1,0 +1,166 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Housie Generator</title>
+  <meta name="description" content="Housie Generator">
+  <meta name="author" content="Paritosh">
+
+  <link rel="stylesheet" href="/assets/css/gameboard.css">
+
+</head>
+
+<body>
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=5mJjjbqd"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+  <script type="text/javascript" src="/assets/js/gameboard.js"></script>
+  <div class="container">
+    <div>
+        <span>
+            Housie Number Generator! Round #<span id="roundNumber">[[${round.id}]]</span>
+        </span>
+    </div>
+    <div class="bigNumberDisplay">
+        <div id="number">0</div>
+        <div id="numberLine"></div>
+    </div>
+    <div>
+        <input id="start" type="button" value="Start"/>
+        <input id="pause" type="button" disabled value="Pause"/>
+        <input id="btnGenerate" type="button" hidden="true" value="Generate"/>
+    </div>
+
+    <br/>
+
+    <div class="numbersTable">
+        <table>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+    <br/>
+
+    <div>
+        <h2>Last 5 numbers: <span id="lastFive"></span></h2>
+    </div>
+
+    <div>
+        <span>Check the <a href="http://chandoo.org/wp/2008/07/16/bingo-housie-ticket-generator-excel/"
+                           title="chandoo.org">Bingo/Housie Ticket Generator excel</a> to get the Housie tickets!</span>
+    </div>
+</div>
+</body>
+</html>
