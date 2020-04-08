@@ -5,6 +5,7 @@ import io.github.paritoshgpt1.Housie.util.Tambola;
 import io.github.paritoshgpt1.Housie.util.TambolaTicket;
 import io.github.paritoshgpt1.Housie.wrapper.TicketWrapper;
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

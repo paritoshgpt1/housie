@@ -73,6 +73,7 @@ $(function() {
         // bingo.say(numberLine + " is " + random);
         responsiveVoice.speak(numberLine + " is " + random, "Hindi Female");
         markNumberOnBoard(random, bingo.roundNumber);
+        $("#claimNumber").val(random);
     });
     $('#start').click(function() {
         bingo.setTimerOn();
@@ -81,13 +82,21 @@ $(function() {
             $('#btnGenerate').click();
         }, bingo.timeInterval * 1000);
     });
-    $(document).keypress(function(event) {
-        if (bingo.isTimerOn) {
-            bingo.setTimerOff();
-        } else {
-            bingo.setTimerOn();
-            $('#start').click();
+    $(document).keypress(function(e) {
+        if (e.key === ' ' || e.key === 'Spacebar') {
+            e.preventDefault();
+            if (bingo.isTimerOn) {
+                bingo.setTimerOff();
+            } else {
+                bingo.setTimerOn();
+                $('#start').click();
+            }
         }
+    });
+    $("#validate").click(function () {
+        console.log("inside validate");
+        var ticketNumnber = $("#claimTicketNumber").val();
+        getTicketDetails(ticketNumnber, bingo.roundNumber);
     });
     window.onbeforeunload = function(e) {
         e = e || window.event;
@@ -109,4 +118,25 @@ function markNumberOnBoard(number, roundNumber) {
             console.log("Number Saved in DB");
         }
     );
+}
+function getTicketDetails (ticketNumber, roundNumber) {
+    console.log("ticketNumber: " + ticketNumber);
+    $.get(
+        "/ticket-details",
+        {
+            ticketNumber: ticketNumber,
+            roundNumber: roundNumber
+        },
+        function(data) {
+            console.log(data);
+            validateClaim(data);
+        }
+    );
+}
+function validateClaim(data) {
+    data.roundNumber = $("#roundNumber").text();
+    data.currentNumber = parseInt($("#claimNumber").val());
+    var claim = $("#claim").val();
+    validate = new Validate(data);
+    validate.checkDividends(claim);
 }

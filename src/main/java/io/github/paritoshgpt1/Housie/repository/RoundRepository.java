@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RoundRepository extends CrudRepository<Round, Long> {
+public interface RoundRepository extends CrudRepository<Round, Integer> {
     Round findRoundById(Integer id);
     Round findRoundByIdAndNumbers(Integer id, String numbers);
     Round findRoundByNumbers(String numbers);

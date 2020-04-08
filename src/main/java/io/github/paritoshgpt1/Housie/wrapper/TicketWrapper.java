@@ -10,7 +10,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Component
 @AllArgsConstructor
@@ -36,6 +39,34 @@ public class TicketWrapper {
         return tickets;
     }
 
+    public Map<String, Object> ticketDetails(int ticketNumber) {
+        Map<String, Object> result = new HashMap<>();
+        Optional<Ticket> ticket = ticketRepository.findById(ticketNumber);
+        if (!ticket.isPresent()) return null;
+        int[][] ticketNumbers = getTicketNumbers(ticket.get());
+        TambolaTicket tambolaTicket = changeTicketToTambolaTicket(ticket.get());
+        result.put("ticketNumbers", ticketNumbers);
+        result.put("allTicketNumbers", tambolaTicket.numbers);
+        return result;
+    }
+
+    private int[][] getTicketNumbers(Ticket ticket) {
+        String[] rows = ticket.getNumbers().split(";");
+        int[][] numbers = new int[3][5];
+        int[][] allNumbers = new int[3][9];
+        for (int i = 0; i < 3; i++) {
+            String[] nums = rows[i].split(",");
+            int columnCounter = 0;
+            for (int j = 0; j < 9; j++) {
+                if (!nums[j].equals("0")) {
+                    numbers[i][columnCounter] = Integer.parseInt(nums[j]);
+                    columnCounter++;
+                }
+            }
+        }
+        return numbers;
+    }
+
 
     public TambolaTicket[] checkAndGetTickets(Player player) {
         List<Ticket> tickets = ticketRepository.findAllByPlayer(player);
@@ -44,6 +75,7 @@ public class TicketWrapper {
         System.out.println(Arrays.toString(tambolaTickets));
         return tambolaTickets;
     }
+
 
     private TambolaTicket[] changeTicketsToTambolaTickets(List<Ticket> tickets) {
         if (tickets.isEmpty()) {
@@ -71,4 +103,6 @@ public class TicketWrapper {
         }
         return tambolaTicket;
     }
+
+
 }

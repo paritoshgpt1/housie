@@ -41,3 +41,7 @@ td.selected {
     color: blue;
     background-color: lavender;
 }
+.validation {
+    float: right;
+    margin-right: 50px;
+}

@@ -2,7 +2,9 @@ package io.github.paritoshgpt1.Housie.controller;
 
 import io.github.paritoshgpt1.Housie.model.Round;
 import io.github.paritoshgpt1.Housie.repository.RoundRepository;
+import io.github.paritoshgpt1.Housie.wrapper.TicketWrapper;
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,12 +12,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
 @AllArgsConstructor
 @RestController
 public class RoundController {
 
 	private final RoundRepository roundRepository;
+	private final TicketWrapper ticketWrapper;
 
 	@PostMapping(value = "/test", produces = "application/json")
 	public void test(Integer number, Integer roundNumber) {
@@ -30,6 +37,20 @@ public class RoundController {
 		newNumberList += number + ",";
 		round.setNumbers(newNumberList);
 		roundRepository.save(round);
+	}
+
+	@GetMapping("/ticket-details")
+	public Object ticketDetails(
+			@RequestParam(name="ticketNumber") Integer ticketNumber,
+			@RequestParam(name="roundNumber") Integer roundNumber
+	) {
+		Map<String, Object> ticketDetails = ticketWrapper.ticketDetails(ticketNumber);
+		Map<String, Object> response = new HashMap<>(ticketDetails);
+		Round round = roundRepository.findRoundById(roundNumber);
+		if (round == null) return null;
+		int[] roundNumbers = Arrays.stream(round.getNumbers().split(",")).mapToInt(Integer::parseInt).toArray();
+		response.put("roundNumbers", roundNumbers);
+		return response;
 	}
 
 }
