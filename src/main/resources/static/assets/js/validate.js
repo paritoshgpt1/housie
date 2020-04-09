@@ -93,7 +93,7 @@ class Validate {
         numbersToCheck.push(this.ticketNumbers[0][4]);
         numbersToCheck.push(this.ticketNumbers[2][0]);
         numbersToCheck.push(this.ticketNumbers[2][4]);
-        if (this.checkNumbersMarked(numbersToCheck, 4)) {
+        if (this.checkAllNumbersMarked(numbersToCheck)) {
             alert("4 Corners correctly claimed");
         } else {
             this.boogie();
@@ -105,7 +105,7 @@ class Validate {
         numbersToCheck.push(this.ticketNumbers[0][2]);
         numbersToCheck.push(this.ticketNumbers[1][2]);
         numbersToCheck.push(this.ticketNumbers[2][2]);
-        if (this.checkNumbersMarked(numbersToCheck, 3)) {
+        if (this.checkAllNumbersMarked(numbersToCheck)) {
             alert("Bamboo correctly claimed");
         } else {
             this.boogie();
@@ -117,7 +117,7 @@ class Validate {
         numbersToCheck.push(this.ticketNumbers[0][0]);
         numbersToCheck.push(this.ticketNumbers[1][0]);
         numbersToCheck.concat(this.ticketNumbers[2]);
-        if (this.checkNumbersMarked(numbersToCheck, 7)) {
+        if (this.checkAllNumbersMarked(numbersToCheck)) {
             alert("L correctly claimed");
         } else {
             this.boogie();
@@ -129,7 +129,7 @@ class Validate {
         numbersToCheck.concat(this.ticketNumbers[0]);
         numbersToCheck.push(this.ticketNumbers[1][2]);
         numbersToCheck.push(this.ticketNumbers[2][2]);
-        if (this.checkNumbersMarked(numbersToCheck, 7)) {
+        if (this.checkAllNumbersMarked(numbersToCheck)) {
             alert("T correctly claimed");
         } else {
             this.boogie();
@@ -143,7 +143,7 @@ class Validate {
         numbersToCheck.concat(this.ticketNumbers[1]);
         numbersToCheck.push(this.ticketNumbers[0][4]);
         numbersToCheck.push(this.ticketNumbers[2][4]);
-        if (this.checkNumbersMarked(numbersToCheck, 9)) {
+        if (this.checkAllNumbersMarked(numbersToCheck)) {
             alert("H correctly claimed");
         } else {
             this.boogie();
@@ -151,7 +151,7 @@ class Validate {
     }
 
     checkforTopLine() {
-        if (this.checkNumbersMarked(this.ticketNumbers[0], 5)) {
+        if (this.checkAllNumbersMarked(this.ticketNumbers[0])) {
             alert("Top Line correctly claimed");
         } else {
             this.boogie();
@@ -159,7 +159,7 @@ class Validate {
     }
 
     checkforMiddleLine() {
-        if (this.checkNumbersMarked(this.ticketNumbers[1], 5)) {
+        if (this.checkAllNumbersMarked(this.ticketNumbers[1])) {
             alert("Middle Line correctly claimed");
         } else {
             this.boogie();
@@ -167,7 +167,7 @@ class Validate {
     }
 
     checkforBotttomLine() {
-        if (this.checkNumbersMarked(this.ticketNumbers[2], 5)) {
+        if (this.checkAllNumbersMarked(this.ticketNumbers[2])) {
             alert("Bottom Line correctly claimed");
         } else {
             this.boogie();
@@ -189,7 +189,7 @@ class Validate {
         let numbersToCheck = [];
         numbersToCheck.push(this.ticketNumbers[0][0]);
         numbersToCheck.push(this.ticketNumbers[2][4]);
-        if (this.checkNumbersMarked(numbersToCheck, 2)) {
+        if (this.checkAllNumbersMarked(numbersToCheck)) {
             alert("Temperature correctly claimed");
         } else {
             this.boogie();
@@ -204,7 +204,7 @@ class Validate {
         numbersToCheck.push(this.ticketNumbers[2][0]);
         numbersToCheck.push(this.ticketNumbers[2][2]);
         numbersToCheck.push(this.ticketNumbers[2][4]);
-        if (this.checkNumbersMarked(numbersToCheck, 6)) {
+        if (this.checkAllNumbersMarked(numbersToCheck)) {
             alert("Pyramid correctly claimed");
         } else {
             this.boogie();
@@ -212,20 +212,110 @@ class Validate {
     }
 
     checkforFullHouse() {
-        if (this.checkNumbersMarked(this.ticketNumbers.flat(), 15)) {
+        if (this.checkAllNumbersMarked(this.ticketNumbers.flat())) {
             alert("Full House correctly claimed");
         } else {
             this.boogie();
         }
     }
 
-    checkforBreakfast(){}
-    checkforLunch(){}
-    checkforDinner(){}
-    checkforYounger(){}
-    checkforOlder(){}
-    checkforRaindrop(){}
+    checkforBreakfast(){
+        if (this.checkForBLD(0, 2)) {
+            alert("Breakfast correctly claimed");
+        } else {
+            this.boogie();
+        }
+    }
+    checkforLunch(){
+        if (this.checkForBLD(3, 5)) {
+            alert("Lunch correctly claimed");
+        } else {
+            this.boogie();
+        }
+    }
+    checkforDinner(){
+        if (this.checkForBLD(6, 8)) {
+            alert("Dinner correctly claimed");
+        } else {
+            this.boogie();
+        }
+    }
 
+    checkForBLD(colStart, colEnd) {
+        let numbersToCheck = [];
+        for (let i = 0; i <= 2; i++) {
+            for (let j = colStart; j <= colEnd; j++) {
+                if (this.allTicketNumbers[i][j] !== 0) {
+                    numbersToCheck.push(this.allTicketNumbers[i][j]);
+                }
+            }
+        }
+        return this.checkAllNumbersMarked(numbersToCheck);
+    }
+
+    checkforYounger(){
+        let allNumbers = this.ticketNumbers.flat();
+        let numbersToCheck = [];
+        let indexCount = 0;
+        for (let i = 0; i < allNumbers.length; i++) {
+            if (allNumbers[i] <= 45) {
+                numbersToCheck[indexCount] = allNumbers[i];
+                indexCount++;
+            }
+        }
+        if (this.checkAllNumbersMarked(numbersToCheck)) {
+            alert("Younger correctly claimed");
+        } else {
+            this.boogie();
+        }
+    }
+    checkforOlder(){
+        let allNumbers = this.ticketNumbers.flat();
+        let numbersToCheck = [];
+        let indexCount = 0;
+        for (let i = 0; i < allNumbers.length; i++) {
+            if (allNumbers[i] > 45) {
+                numbersToCheck[indexCount] = allNumbers[i];
+                indexCount++;
+            }
+        }
+        if (this.checkAllNumbersMarked(numbersToCheck)) {
+            alert("Older correctly claimed");
+        } else {
+            this.boogie();
+        }
+    }
+    checkforRaindrop(){
+        let currentNumberPresent = false;
+        for (let j = 0; j < 9; j++) {
+            let numberMarkedInColumn = false;
+            for (let i = 0; i < 3; i++) {
+                if (this.allTicketNumbers[i][j] === 0) continue;
+                if (this.roundNumbers.has(this.allTicketNumbers[i][j])) {
+                    numberMarkedInColumn = true;
+                    if (this.allTicketNumbers[i][j] === this.currentNumber) {
+                        currentNumberPresent = true;
+                    }
+                    break;
+                }
+            }
+            if (!numberMarkedInColumn) {
+                this.boogie();
+                return;
+            }
+        }
+        if (currentNumberPresent) {
+            alert("Raindrop correctly claimed");
+        } else {
+            this.boogie();
+        }
+
+    }
+
+
+    checkAllNumbersMarked(numbersToCheck) {
+        this.checkNumbersMarked(numbersToCheck, numbersToCheck.length);
+    }
 
     // function checkNumbersMarked: checks whether the numbers to check have been actually announced or not
     // numbersToCheck: list of numbers to be checked
@@ -247,83 +337,4 @@ class Validate {
     boogie() {
         alert("Incorrect claim. Boogie!!!");
     }
-}
-// function checkForCorners: checks if the player has hit the Corner dividend
-// param ticket: 2D array of 3 rows and 9 columns
-// param markedNumbers: array of all numbers in the ticket which have been called already
-// param currentNumber: the current number in the ticket which has been called
-function checkForCorners(ticket, markedNumbers, currentNumber) {
-    if (markedNumbers.indexOf(currentNumber) !== -1 && markedNumbers.length >= 4) {
-        var topLeft = false;
-        var topRight = false;
-        var bottomLeft = false;
-        var bottomRight = false;
-
-        var topLeftNumber = 0;
-        var topRightNumber = 0;
-        var bottomLeftNumber = 0;
-        var bottomRightNumber = 0;
-
-        // check for topLeft corner
-        for (var i = 0; i < ticket[0].length; i++) {
-            if (ticket[0][i] == 0) {
-                continue;
-            } else {
-                if (markedNumbers.indexOf(ticket[0][i]) !== -1) {
-                    topLeft = true;
-                    topLeftNumber = ticket[0][i]
-                }
-                break;
-            }
-        }
-
-        // check for topRight corner
-        for (var i = ticket[0].length - 1; i >= 0; i--) {
-            if (ticket[0][i] == 0) {
-                continue;
-            } else {
-                if (markedNumbers.indexOf(ticket[0][i]) !== -1) {
-                    topRight = true;
-                    topRightNumber = ticket[0][i]
-                }
-                break;
-            }
-        }
-
-        // check for bottomLeft corner
-        for (var i = 0; i < ticket[2].length; i++) {
-            if (ticket[2][i] == 0) {
-                continue;
-            } else {
-                if (markedNumbers.indexOf(ticket[2][i]) !== -1) {
-                    bottomLeft = true;
-                    bottomLeftNumber = ticket[2][i]
-                }
-                break;
-            }
-        }
-
-        // check for bottomRight corner
-        for (var i = ticket[2].length - 1; i >= 0; i--) {
-            if (ticket[2][i] == 0) {
-                continue;
-            } else {
-                if (markedNumbers.indexOf(ticket[2][i]) !== -1) {
-                    bottomRight = true;
-                    bottomRightNumber = ticket[2][i]
-                }
-                break;
-            }
-        }
-
-        // return the corener dividend if all corners have been marked
-        if (topLeft && topRight && bottomLeft && bottomRight) {
-            if (topLeftNumber == currentNumber || topRightNumber == currentNumber || bottomLeftNumber == currentNumber || bottomRightNumber == currentNumber) {
-                return "Corners"
-            }
-            return "";
-        }
-
-    }
-    return "";
 }
