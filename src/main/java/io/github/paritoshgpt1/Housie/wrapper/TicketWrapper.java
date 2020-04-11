@@ -104,5 +104,10 @@ public class TicketWrapper {
         return tambolaTicket;
     }
 
+    public Ticket getTicket(Integer ticketId) {
+        Optional<Ticket> ticket = ticketRepository.findById(ticketId);
+        return ticket.orElse(null);
+    }
+
 
 }

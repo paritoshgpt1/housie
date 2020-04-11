@@ -1,6 +1,9 @@
 package io.github.paritoshgpt1.Housie.controller;
 
+import io.github.paritoshgpt1.Housie.dto.ClaimDto;
+import io.github.paritoshgpt1.Housie.model.Claim;
 import io.github.paritoshgpt1.Housie.model.Round;
+import io.github.paritoshgpt1.Housie.repository.ClaimRepository;
 import io.github.paritoshgpt1.Housie.repository.RoundRepository;
 import io.github.paritoshgpt1.Housie.wrapper.TicketWrapper;
 import lombok.AllArgsConstructor;
@@ -22,6 +25,7 @@ import java.util.Map;
 public class RoundController {
 
 	private final RoundRepository roundRepository;
+	private final ClaimRepository claimRepository;
 	private final TicketWrapper ticketWrapper;
 
 	@PostMapping(value = "/test", produces = "application/json")
@@ -51,6 +55,17 @@ public class RoundController {
 		int[] roundNumbers = Arrays.stream(round.getNumbers().split(",")).mapToInt(Integer::parseInt).toArray();
 		response.put("roundNumbers", roundNumbers);
 		return response;
+	}
+
+	@PostMapping("/claims")
+	public void saveClaim(ClaimDto claimDto) {
+
+		Claim claim = Claim.builder()
+				.name(claimDto.getName())
+				.ticket(ticketWrapper.getTicket(claimDto.getTicketId()))
+				.build();
+		claimRepository.save(claim);
+
 	}
 
 }

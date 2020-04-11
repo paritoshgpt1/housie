@@ -129,14 +129,14 @@ function getTicketDetails (ticketNumber, roundNumber) {
         },
         function(data) {
             console.log(data);
-            validateClaim(data);
+            validateClaim(data, ticketNumber);
         }
     );
 }
-function validateClaim(data) {
+function validateClaim(data, ticketNumber) {
     data.roundNumber = $("#roundNumber").text();
     data.currentNumber = parseInt($("#claimNumber").val());
     var claim = $("#claim").val();
     validate = new Validate(data);
-    validate.checkDividends(claim);
+    validate.checkDividends(claim, ticketNumber);
 }

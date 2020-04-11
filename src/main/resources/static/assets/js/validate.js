@@ -11,10 +11,14 @@ class Validate {
         this.numberOfRows = 3;
         this.columnsWithZeros = 9;
         this.columnsWithoutZeros = 5;
+        this.claim = null;
+        this.ticketNumber = null;
     }
 
     // function checkDividends: checks if the player has hit any dividend
-    checkDividends(claim) {
+    checkDividends(claim, ticketNumber) {
+        this.claim = claim;
+        this.ticketNumber = ticketNumber;
         switch (claim) {
             case "early7":
                 this.checkForEarly7();
@@ -82,6 +86,7 @@ class Validate {
     checkForEarly7() {
         if (this.checkNumbersMarked(this.ticketNumbers.flat(), 7)) {
             alert("Early 7 correctly claimed");
+            this.correctlyClaimed();
         } else {
             this.boogie();
         }
@@ -95,6 +100,7 @@ class Validate {
         numbersToCheck.push(this.ticketNumbers[2][4]);
         if (this.checkAllNumbersMarked(numbersToCheck)) {
             alert("4 Corners correctly claimed");
+            this.correctlyClaimed();
         } else {
             this.boogie();
         }
@@ -107,6 +113,7 @@ class Validate {
         numbersToCheck.push(this.ticketNumbers[2][2]);
         if (this.checkAllNumbersMarked(numbersToCheck)) {
             alert("Bamboo correctly claimed");
+            this.correctlyClaimed();
         } else {
             this.boogie();
         }
@@ -119,6 +126,7 @@ class Validate {
         numbersToCheck.concat(this.ticketNumbers[2]);
         if (this.checkAllNumbersMarked(numbersToCheck)) {
             alert("L correctly claimed");
+            this.correctlyClaimed();
         } else {
             this.boogie();
         }
@@ -131,6 +139,7 @@ class Validate {
         numbersToCheck.push(this.ticketNumbers[2][2]);
         if (this.checkAllNumbersMarked(numbersToCheck)) {
             alert("T correctly claimed");
+            this.correctlyClaimed();
         } else {
             this.boogie();
         }
@@ -145,6 +154,7 @@ class Validate {
         numbersToCheck.push(this.ticketNumbers[2][4]);
         if (this.checkAllNumbersMarked(numbersToCheck)) {
             alert("H correctly claimed");
+            this.correctlyClaimed();
         } else {
             this.boogie();
         }
@@ -153,6 +163,7 @@ class Validate {
     checkforTopLine() {
         if (this.checkAllNumbersMarked(this.ticketNumbers[0])) {
             alert("Top Line correctly claimed");
+            this.correctlyClaimed();
         } else {
             this.boogie();
         }
@@ -161,6 +172,7 @@ class Validate {
     checkforMiddleLine() {
         if (this.checkAllNumbersMarked(this.ticketNumbers[1])) {
             alert("Middle Line correctly claimed");
+            this.correctlyClaimed();
         } else {
             this.boogie();
         }
@@ -169,6 +181,7 @@ class Validate {
     checkforBotttomLine() {
         if (this.checkAllNumbersMarked(this.ticketNumbers[2])) {
             alert("Bottom Line correctly claimed");
+            this.correctlyClaimed();
         } else {
             this.boogie();
         }
@@ -183,6 +196,7 @@ class Validate {
             }
         }
         alert("Zona correctly claimed");
+        this.correctlyClaimed();
     }
 
     checkforTemperature() {
@@ -191,6 +205,7 @@ class Validate {
         numbersToCheck.push(this.ticketNumbers[2][4]);
         if (this.checkAllNumbersMarked(numbersToCheck)) {
             alert("Temperature correctly claimed");
+            this.correctlyClaimed();
         } else {
             this.boogie();
         }
@@ -206,6 +221,7 @@ class Validate {
         numbersToCheck.push(this.ticketNumbers[2][4]);
         if (this.checkAllNumbersMarked(numbersToCheck)) {
             alert("Pyramid correctly claimed");
+            this.correctlyClaimed();
         } else {
             this.boogie();
         }
@@ -214,6 +230,7 @@ class Validate {
     checkforFullHouse() {
         if (this.checkAllNumbersMarked(this.ticketNumbers.flat())) {
             alert("Full House correctly claimed");
+            this.correctlyClaimed();
         } else {
             this.boogie();
         }
@@ -222,6 +239,7 @@ class Validate {
     checkforBreakfast(){
         if (this.checkForBLD(0, 2)) {
             alert("Breakfast correctly claimed");
+            this.correctlyClaimed();
         } else {
             this.boogie();
         }
@@ -229,6 +247,7 @@ class Validate {
     checkforLunch(){
         if (this.checkForBLD(3, 5)) {
             alert("Lunch correctly claimed");
+            this.correctlyClaimed();
         } else {
             this.boogie();
         }
@@ -236,6 +255,7 @@ class Validate {
     checkforDinner(){
         if (this.checkForBLD(6, 8)) {
             alert("Dinner correctly claimed");
+            this.correctlyClaimed();
         } else {
             this.boogie();
         }
@@ -265,6 +285,7 @@ class Validate {
         }
         if (this.checkAllNumbersMarked(numbersToCheck)) {
             alert("Younger correctly claimed");
+            this.correctlyClaimed();
         } else {
             this.boogie();
         }
@@ -281,6 +302,7 @@ class Validate {
         }
         if (this.checkAllNumbersMarked(numbersToCheck)) {
             alert("Older correctly claimed");
+            this.correctlyClaimed();
         } else {
             this.boogie();
         }
@@ -306,6 +328,7 @@ class Validate {
         }
         if (currentNumberPresent) {
             alert("Raindrop correctly claimed");
+            this.correctlyClaimed();
         } else {
             this.boogie();
         }
@@ -314,13 +337,14 @@ class Validate {
 
 
     checkAllNumbersMarked(numbersToCheck) {
-        this.checkNumbersMarked(numbersToCheck, numbersToCheck.length);
+        return this.checkNumbersMarked(numbersToCheck, numbersToCheck.length);
     }
 
     // function checkNumbersMarked: checks whether the numbers to check have been actually announced or not
     // numbersToCheck: list of numbers to be checked
     // count: the expected count of numbers to be marked
     checkNumbersMarked(numbersToCheck, count) {
+        console.log(numbersToCheck, count);
         let counter = 0;
         let currentNumberPresent = false;
         for (let i = 0; i < numbersToCheck.length; i++) {
@@ -336,5 +360,18 @@ class Validate {
 
     boogie() {
         alert("Incorrect claim. Boogie!!!");
+    }
+
+    correctlyClaimed() {
+        $.post(
+            "/claims",
+            {
+                name: this.claim,
+                ticketId: this.ticketNumber
+            },
+            function() {
+                console.log("Claim successfully saved");
+            }
+        );
     }
 }
