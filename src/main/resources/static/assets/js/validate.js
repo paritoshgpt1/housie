@@ -318,7 +318,6 @@ class Validate {
                     if (this.allTicketNumbers[i][j] === this.currentNumber) {
                         currentNumberPresent = true;
                     }
-                    break;
                 }
             }
             if (!numberMarkedInColumn) {
