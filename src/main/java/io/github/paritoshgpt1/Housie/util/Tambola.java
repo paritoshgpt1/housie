@@ -236,12 +236,10 @@ public class Tambola {
         // Fill columns with 1 numbers in random position in any row (wherever possible)
         for (int colIndex = 0; colIndex < NUMBER_OF_COLUMNS; colIndex++) {
             List<Integer> currSetCol = currSet.get(colIndex);
-            Set<Integer> unique = new HashSet<>();
             if (currSetCol.size() == 1) {
                 while (true) {
                     int randIndex = getRand(0, 2);
-                    unique.add(randIndex);
-                    if (currTambolaTicket.getRowCount(randIndex) == 5) continue;
+                    if (currTambolaTicket.getRowCount(randIndex) >= 5) continue;
 
                     currTambolaTicket.numbers[randIndex][colIndex] = currSetCol.remove(0);
                     break;
