@@ -187,13 +187,16 @@ public class Tambola {
             while (!currSetCol.isEmpty()) {
                 // If first row already has 5 numbers, put the 2 numbers in 2nd and 3rd row
                 if (currTambolaTicket.getRowCount(0) == 5) {
+                    System.out.println("5 numbers in 1st row");
                     currTambolaTicket.numbers[1][colIndex] = currSetCol.remove(0);
                     currTambolaTicket.numbers[2][colIndex] = currSetCol.remove(0);
                 } else if (currTambolaTicket.getRowCount(1) == 5) {
+                    System.out.println("5 numbers in 2nd row");
                     // If second row already has 5 numbers, put the 2 numbers in 1st and 3rd row
                     currTambolaTicket.numbers[0][colIndex] = currSetCol.remove(0);
                     currTambolaTicket.numbers[2][colIndex] = currSetCol.remove(0);
                 } else if (currTambolaTicket.getRowCount(2) == 5) {
+                    System.out.println("5 numbers in 3rd row");
                     // If third row already has 5 numbers, put the 2 numbers in 1st and 2nd row
                     currTambolaTicket.numbers[0][colIndex] = currSetCol.remove(0);
                     currTambolaTicket.numbers[1][colIndex] = currSetCol.remove(0);
