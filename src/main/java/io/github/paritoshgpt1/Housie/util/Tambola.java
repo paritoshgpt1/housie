@@ -189,6 +189,10 @@ public class Tambola {
                 if (currTambolaTicket.getRowCount(0) == 5) {
                     currTambolaTicket.numbers[1][colIndex] = currSetCol.remove(0);
                     currTambolaTicket.numbers[2][colIndex] = currSetCol.remove(0);
+                } else if (currTambolaTicket.getRowCount(1) == 5) {
+                    // If second row already has 5 numbers, put the 2 numbers in 1st and 3rd row
+                    currTambolaTicket.numbers[0][colIndex] = currSetCol.remove(0);
+                    currTambolaTicket.numbers[2][colIndex] = currSetCol.remove(0);
                 } else if (currTambolaTicket.getRowCount(2) == 5) {
                     // If third row already has 5 numbers, put the 2 numbers in 1st and 2nd row
                     currTambolaTicket.numbers[0][colIndex] = currSetCol.remove(0);
