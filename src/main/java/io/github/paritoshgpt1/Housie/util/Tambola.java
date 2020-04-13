@@ -17,7 +17,13 @@ import static io.github.paritoshgpt1.Housie.util.TambolaTicket.TICKETS_IN_A_SHEE
 public class Tambola {
 
     public static void main(String[] args) {
-        System.out.println(Arrays.toString(generateTickets(6)));
+        System.out.println("Final Tickets Generated:\n\n" + Arrays.toString(generateTickets(6))
+                .replace("[[", "[")
+                .replace("]]", "]")
+                .replace("], [", "],\n[")
+                .replace(", [", "[")
+                .replace(" ", "\t")
+        );
     }
 
     static int getRand(int min, int max) {
@@ -183,6 +189,10 @@ public class Tambola {
                 if (currTambolaTicket.getRowCount(0) == 5) {
                     currTambolaTicket.numbers[1][colIndex] = currSetCol.remove(0);
                     currTambolaTicket.numbers[2][colIndex] = currSetCol.remove(0);
+                } else if (currTambolaTicket.getRowCount(2) == 5) {
+                    // If third row already has 5 numbers, put the 2 numbers in 1st and 2nd row
+                    currTambolaTicket.numbers[0][colIndex] = currSetCol.remove(0);
+                    currTambolaTicket.numbers[1][colIndex] = currSetCol.remove(0);
                 } else {
                     // if first row still has space, select the row randomly for 1st number
                     // 2nd row will have space for sure, because if 1st has space

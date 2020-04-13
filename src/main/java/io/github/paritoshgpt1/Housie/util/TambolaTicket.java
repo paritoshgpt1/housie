@@ -27,6 +27,13 @@ public class TambolaTicket {
         return count;
     }
 
+    public String toString() {
+        return Arrays.deepToString(this.numbers)
+                .replace("[[", "[")
+                .replace("]]", "]")
+                + "\n\n";
+    }
+
     public String getDBValue() {
         return Arrays.deepToString(this.numbers)
                 .replace("],", ";")
