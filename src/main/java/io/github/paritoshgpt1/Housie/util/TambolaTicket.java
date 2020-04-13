@@ -27,6 +27,13 @@ public class TambolaTicket {
         return count;
     }
 
+    public boolean isValid() {
+        for (int i = 0; i < NUMBER_OF_ROWS; i++) {
+            if (this.getRowCount(i) != 5) return false;
+        }
+        return true;
+    }
+
     public String toString() {
         return Arrays.deepToString(this.numbers)
                 .replace("[[", "[")

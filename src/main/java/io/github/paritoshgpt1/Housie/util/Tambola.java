@@ -154,12 +154,28 @@ public class Tambola {
         System.out.println("Step 6");
         //got the sets - need to arrange in tambolaTickets now
         for (int setIndex = 0; setIndex < TICKETS_IN_A_SHEET; setIndex++) {
-            List<List<Integer>> currSet = sets.get(setIndex);
+            List<List<Integer>> currSet = clone(sets.get(setIndex));
             TambolaTicket currTambolaTicket = tambolaTickets[setIndex];
             fillTicket(currTambolaTicket, currSet);
+            while (!currTambolaTicket.isValid()) {
+                System.out.println("#### Invalid Ticket ####");
+                System.out.println(currTambolaTicket);
+                currSet = clone(sets.get(setIndex));
+                tambolaTickets[setIndex] = new TambolaTicket();
+                currTambolaTicket = tambolaTickets[setIndex];
+                fillTicket(currTambolaTicket, currSet);
+            }
         }
 
         return tambolaTickets;
+    }
+
+    private static List<List<Integer>> clone(List<List<Integer>> toCopy) {
+        List<List<Integer>> copy = new ArrayList<>();
+        for (List<Integer> each: toCopy) {
+            copy.add(new ArrayList<>(each));
+        }
+        return copy;
     }
 
 
@@ -177,7 +193,7 @@ public class Tambola {
                 currTambolaTicket.numbers[2][colIndex] = currSetCol.remove(0);
             }
         }
-        System.out.println("After fiiling columns with 3 numbers");
+        System.out.println("After filling columns with 3 numbers");
         System.out.println(currTambolaTicket);
 
         // Fill columns with 2 numbers
@@ -213,40 +229,25 @@ public class Tambola {
                         // if 2nd and 3rd row both have less than 5 numbers, select a row randomly for 2nd number
                         int randIndex2 = getRand(1, 2);
                         currTambolaTicket.numbers[randIndex2][colIndex] = currSetCol.remove(0);
-//                        if (currTambolaTicket.getRowCount(1) < 5 && currTambolaTicket.getRowCount(2) < 5) {
-//                            int randIndex2 = getRand(1, 2);
-//                            currTambolaTicket.numbers[randIndex2][colIndex] = currSetCol.remove(0);
-//                        } else if (currTambolaTicket.getRowCount(1) == 5) {
-//                            // if 2nd row already has 5 numbers, put 2nd number in 3rd row
-//                            currTambolaTicket.numbers[2][colIndex] = currSetCol.remove(0);
-//                        } else if (currTambolaTicket.getRowCount(2) == 5) {
-//                            // if 3rd row already has 5 numbers, put 2nd number in 2nd row
-//                            currTambolaTicket.numbers[1][colIndex] = currSetCol.remove(0);
-//                        } else {
-//                            // This will never happen
-//                            System.out.println("ERROR !!!!!!!!!!!!: " + currSetCol.get(0));
-//                        }
                     }
                 }
             }
         }
-        System.out.println("After fiiling columns with 2 numbers");
+        System.out.println("After filling columns with 2 numbers");
         System.out.println(currTambolaTicket);
 
         // Fill columns with 1 numbers in random position in any row (wherever possible)
         for (int colIndex = 0; colIndex < NUMBER_OF_COLUMNS; colIndex++) {
             List<Integer> currSetCol = currSet.get(colIndex);
             if (currSetCol.size() == 1) {
-                while (true) {
-                    int randIndex = getRand(0, 2);
-                    if (currTambolaTicket.getRowCount(randIndex) >= 5) continue;
-
-                    currTambolaTicket.numbers[randIndex][colIndex] = currSetCol.remove(0);
-                    break;
+                int randIndex = getRand(0, 2);
+                while (currTambolaTicket.getRowCount(randIndex) == 5) {
+                    randIndex = getRand(0, 2);
                 }
+                currTambolaTicket.numbers[randIndex][colIndex] = currSetCol.remove(0);
             }
         }
-        System.out.println("After fiiling columns with 1 number");
+        System.out.println("After filling columns with 1 number");
         System.out.println(currTambolaTicket);
     }
 
