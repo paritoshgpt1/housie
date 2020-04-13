@@ -211,19 +211,21 @@ public class Tambola {
                         currTambolaTicket.numbers[2][colIndex] = currSetCol.remove(0);
                     } else {
                         // if 2nd and 3rd row both have less than 5 numbers, select a row randomly for 2nd number
-                        if (currTambolaTicket.getRowCount(1) < 5 && currTambolaTicket.getRowCount(2) < 5) {
-                            int randIndex2 = getRand(1, 2);
-                            currTambolaTicket.numbers[randIndex2][colIndex] = currSetCol.remove(0);
-                        } else if (currTambolaTicket.getRowCount(1) == 5) {
-                            // if 2nd row already has 5 numbers, put 2nd number in 3rd row
-                            currTambolaTicket.numbers[2][colIndex] = currSetCol.remove(0);
-                        } else if (currTambolaTicket.getRowCount(2) == 5) {
-                            // if 3rd row already has 5 numbers, put 2nd number in 2nd row
-                            currTambolaTicket.numbers[1][colIndex] = currSetCol.remove(0);
-                        } else {
-                            // This will never happen
-                            System.out.println("ERROR !!!!!!!!!!!!: " + currSetCol.get(0));
-                        }
+                        int randIndex2 = getRand(1, 2);
+                        currTambolaTicket.numbers[randIndex2][colIndex] = currSetCol.remove(0);
+//                        if (currTambolaTicket.getRowCount(1) < 5 && currTambolaTicket.getRowCount(2) < 5) {
+//                            int randIndex2 = getRand(1, 2);
+//                            currTambolaTicket.numbers[randIndex2][colIndex] = currSetCol.remove(0);
+//                        } else if (currTambolaTicket.getRowCount(1) == 5) {
+//                            // if 2nd row already has 5 numbers, put 2nd number in 3rd row
+//                            currTambolaTicket.numbers[2][colIndex] = currSetCol.remove(0);
+//                        } else if (currTambolaTicket.getRowCount(2) == 5) {
+//                            // if 3rd row already has 5 numbers, put 2nd number in 2nd row
+//                            currTambolaTicket.numbers[1][colIndex] = currSetCol.remove(0);
+//                        } else {
+//                            // This will never happen
+//                            System.out.println("ERROR !!!!!!!!!!!!: " + currSetCol.get(0));
+//                        }
                     }
                 }
             }
