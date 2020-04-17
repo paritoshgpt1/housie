@@ -23,6 +23,11 @@
             Housie Number Generator! Round #<span id="roundNumber">[[${round.id}]]</span>
         </span>
     </div>
+    <div class="leftTop">
+        <label for="speed">Speed: </label>
+        <input name="speed" id="speed" type="number" value="7"/>
+        <input type="button" id="updateSpeed" value="Update">
+    </div>
     <div class="bigNumberDisplay">
         <div id="number">0</div>
         <div id="numberLine"></div>
@@ -197,10 +202,6 @@
         <h2>Last 5 numbers: <span id="lastFive"></span></h2>
     </div>
 
-    <div>
-        <span>Check the <a href="http://chandoo.org/wp/2008/07/16/bingo-housie-ticket-generator-excel/"
-                           title="chandoo.org">Bingo/Housie Ticket Generator excel</a> to get the Housie tickets!</span>
-    </div>
 </div>
 </body>
 </html>
