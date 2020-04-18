@@ -1,8 +1,11 @@
 package io.github.paritoshgpt1.Housie.controller;
 
+import io.github.paritoshgpt1.Housie.model.Dividend;
 import io.github.paritoshgpt1.Housie.model.Round;
+import io.github.paritoshgpt1.Housie.repository.DividendRepository;
 import io.github.paritoshgpt1.Housie.repository.RoundRepository;
 import lombok.AllArgsConstructor;
+import org.apache.commons.collections4.IterableUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class GameBoardController {
 
 	private final RoundRepository roundRepository;
+	private final DividendRepository dividendRepository;
 
 	@GetMapping("/game-board")
 	public String gameBoard(
@@ -26,5 +30,12 @@ public class GameBoardController {
 		}
 		model.addAttribute("round", round);
 		return "gameboard.html";
+	}
+
+	@GetMapping("/dividends")
+	public String dividends(Model model) {
+		Iterable<Dividend> dividends = dividendRepository.findByOrderById();
+		model.addAttribute("dividends", IterableUtils.toList(dividends));
+		return "dividends.html";
 	}
 }
