@@ -74,3 +74,11 @@ h1, h4 a{
             linear-gradient(to top left, transparent 45%, rgba(255,0,0,0.35) 46%, rgba(255,0,0,0.35) 54%, transparent 55%);
             linear-gradient(to top right, transparent 45%, rgba(255,0,0,0.35) 46%, rgba(255,0,0,0.35) 54%, transparent 55%);
 }
+
+.player-tickets {
+    width: 100%;
+}
+
+.player-tickets td {
+    font-size: 19px;
+}
