@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Ticket Generator</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta charset=utf-8/>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="/assets/css/style.css"/>
+    <script type="text/javascript" src="/assets/js/script.js"></script>
+</head>
+<body>
+<h1 align="center">Ticket Details</h1>
+
+<br>
+<table width="70%">
+    <thead>
+        <tr>
+            <td width="30%">Name</td>
+            <td width="70%">Link</td>
+        </tr>
+    </thead>
+    <tr th:each="player,iterStat : ${players}">
+        <td th:text="${player.name}"></td>
+        <td th:text="${urls[iterStat.index]}"></td>
+    </tr>
+</table>
+<br>
+To Start Game: <a href="/game-board">Click here</a>
+</body>
+</html>

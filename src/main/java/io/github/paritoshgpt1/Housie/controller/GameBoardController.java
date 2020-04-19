@@ -29,13 +29,13 @@ public class GameBoardController {
 			round = roundRepository.save(new Round());
 		}
 		model.addAttribute("round", round);
-		return "gameboard.html";
+		return "gameboard";
 	}
 
 	@GetMapping("/dividends")
 	public String dividends(Model model) {
 		Iterable<Dividend> dividends = dividendRepository.findByOrderById();
 		model.addAttribute("dividends", IterableUtils.toList(dividends));
-		return "dividends.html";
+		return "dividends";
 	}
 }

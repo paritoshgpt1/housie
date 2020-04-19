@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Ticket Generator</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta charset=utf-8/>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="/assets/css/style.css"/>
+    <script type="text/javascript" src="/assets/js/script.js"></script>
+</head>
+<body>
+<h1 align="center">Welcome [[${organizer.name}]]. Lets get you started !</h1>
+
+<p>
+Please enter the player details: (Maximum 6 tickets for each player)
+</p>
+<br>
+<form action="#" th:action="@{/create-players}" th:object="${playerDetailsForm}"  method="post">
+    <p th:each="i: ${#numbers.sequence(0, playerForm.count - 1)}">
+        <label>
+            Name
+            <input type="text" th:field="*{players[__${i}__].name}">
+        </label>
+        <label>
+            Number of Tickets
+            <input type="number" th:field="*{players[__${i}__].tickets}">
+        </label>
+    </p>
+    <input type="submit" value="Submit">
+</form>
+
+
+</body>
+</html>
