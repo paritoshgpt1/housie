@@ -201,8 +201,8 @@ class Validate {
 
     checkforTemperature() {
         let numbersToCheck = [];
-        numbersToCheck.push(min(this.ticketNumbers.flat()));
-        numbersToCheck.push(max(this.ticketNumbers.flat()));
+        numbersToCheck.push(Math.min.apply(this, this.ticketNumbers.flat()));
+        numbersToCheck.push(Math.max.apply(this, this.ticketNumbers.flat()));
         if (this.checkAllNumbersMarked(numbersToCheck)) {
             alert("Temperature correctly claimed");
             this.correctlyClaimed();
