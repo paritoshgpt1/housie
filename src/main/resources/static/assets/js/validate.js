@@ -123,7 +123,7 @@ class Validate {
         let numbersToCheck = [];
         numbersToCheck.push(this.ticketNumbers[0][0]);
         numbersToCheck.push(this.ticketNumbers[1][0]);
-        numbersToCheck.concat(this.ticketNumbers[2]);
+        numbersToCheck = numbersToCheck.concat(this.ticketNumbers[2]);
         if (this.checkAllNumbersMarked(numbersToCheck)) {
             alert("L correctly claimed");
             this.correctlyClaimed();
@@ -134,7 +134,7 @@ class Validate {
 
     checkforT() {
         let numbersToCheck = [];
-        numbersToCheck.concat(this.ticketNumbers[0]);
+        numbersToCheck = numbersToCheck.concat(this.ticketNumbers[0]);
         numbersToCheck.push(this.ticketNumbers[1][2]);
         numbersToCheck.push(this.ticketNumbers[2][2]);
         if (this.checkAllNumbersMarked(numbersToCheck)) {
@@ -149,7 +149,7 @@ class Validate {
         let numbersToCheck = [];
         numbersToCheck.push(this.ticketNumbers[0][0]);
         numbersToCheck.push(this.ticketNumbers[2][0]);
-        numbersToCheck.concat(this.ticketNumbers[1]);
+        numbersToCheck = numbersToCheck.concat(this.ticketNumbers[1]);
         numbersToCheck.push(this.ticketNumbers[0][4]);
         numbersToCheck.push(this.ticketNumbers[2][4]);
         if (this.checkAllNumbersMarked(numbersToCheck)) {
@@ -201,8 +201,8 @@ class Validate {
 
     checkforTemperature() {
         let numbersToCheck = [];
-        numbersToCheck.push(this.ticketNumbers[0][0]);
-        numbersToCheck.push(this.ticketNumbers[2][4]);
+        numbersToCheck.push(min(this.ticketNumbers.flat()));
+        numbersToCheck.push(max(this.ticketNumbers.flat()));
         if (this.checkAllNumbersMarked(numbersToCheck)) {
             alert("Temperature correctly claimed");
             this.correctlyClaimed();

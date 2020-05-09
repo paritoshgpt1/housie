@@ -41,7 +41,7 @@ public class OrganizerController {
 
 	@PostMapping("/organizer")
 	public String organizerDetails(@ModelAttribute Organizer organizer, Model model) {
-		Organizer organizerDb = organizerRepository.findByCode(organizer.getCode());
+		Organizer organizerDb = organizerRepository.findByCode(organizer.getCode().toLowerCase());
 		if (organizerDb == null) {
 			ErrorPage error = new ErrorPage();
 			error.setHeading("You do not have access!");
