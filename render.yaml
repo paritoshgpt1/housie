@@ -1,10 +1,8 @@
 services:
   - type: web
     name: housie
-    env: java
+    env: docker
     plan: free
-    buildCommand: mvn -DskipTests package
-    startCommand: java -jar target/Housie-0.0.1-SNAPSHOT.war
     healthCheckPath: /
     envVars:
       # Database (set these in Render dashboard or when deploying the Blueprint)
@@ -22,4 +20,3 @@ services:
         value: https
       - key: CUSTOM_HOST
         sync: false  # e.g. your-service.onrender.com
-
