@@ -20,10 +20,11 @@
                         <table class="table table-sm mb-0">
                             <thead class="thead-light">
                             <tr>
-                                <th style="width:10%">ID</th>
-                                <th style="width:20%">Player ID</th>
-                                <th style="width:35%">Player Name</th>
-                                <th style="width:35%">Created</th>
+                                <th style="width:8%">ID</th>
+                                <th style="width:16%">Player ID</th>
+                                <th style="width:28%">Player Name</th>
+                                <th style="width:24%">Organizer</th>
+                                <th style="width:24%">Created</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -31,9 +32,10 @@
                                 <td th:text="${t.id}"></td>
                                 <td th:text="${t.player != null ? t.player.id : ''}"></td>
                                 <td th:text="${t.player != null ? t.player.name : ''}"></td>
+                                <td th:text="${t.player != null && t.player.organizer != null ? t.player.organizer.name : ''}"></td>
                                 <td th:text="${#dates.format(t.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
                             </tr>
-                            <tr th:if="${#lists.isEmpty(items)}"><td colspan="4" class="text-center p-4">No tickets</td></tr>
+                            <tr th:if="${#lists.isEmpty(items)}"><td colspan="5" class="text-center p-4">No tickets</td></tr>
                             </tbody>
                         </table>
                     </div>

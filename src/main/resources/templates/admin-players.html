@@ -14,9 +14,19 @@
             <div class="d-flex align-items-center mb-3">
                 <h3 class="mb-0">Players</h3>
                 <form class="form-inline ml-auto" method="get" action="/admin/players">
+                    <label class="mr-2 mb-0 small text-muted">Organizer</label>
+                    <select class="form-control form-control-sm mr-2" name="org">
+                        <option value="" th:selected="${org}==''">All</option>
+                        <option th:each="o : ${organizersAll}"
+                                th:value="${o.code}"
+                                th:selected="${org}==${o.code}"
+                                th:text="${o.name}">
+                        </option>
+                    </select>
+
                     <input class="form-control form-control-sm mr-2" type="text" name="q" placeholder="Search name..." th:value="${q}">
                     <input type="hidden" name="size" th:value="${page.size}">
-                    <button class="btn btn-sm btn-outline-primary" type="submit">Search</button>
+                    <button class="btn btn-sm btn-outline-primary" type="submit">Filter</button>
                     <a class="btn btn-sm btn-link ml-2" href="/admin/players">Reset</a>
                 </form>
             </div>
@@ -26,11 +36,12 @@
                         <table class="table table-sm mb-0">
                             <thead class="thead-light">
                             <tr>
-                                <th style="width:10%">ID</th>
-                                <th style="width:35%">Name</th>
-                                <th style="width:25%">Code</th>
-                                <th style="width:15%">Tickets</th>
-                                <th style="width:15%">Created</th>
+                                <th style="width:8%">ID</th>
+                                <th style="width:28%">Name</th>
+                                <th style="width:18%">Code</th>
+                                <th style="width:18%">Organizer</th>
+                                <th style="width:12%">Tickets</th>
+                                <th style="width:16%">Created</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -38,10 +49,11 @@
                                 <td th:text="${p.id}"></td>
                                 <td th:text="${p.name}"></td>
                                 <td><code th:text="${p.code}"></code></td>
+                                <td th:text="${p.organizer != null ? p.organizer.name : ''}"></td>
                                 <td th:text="${p.tickets}"></td>
                                 <td th:text="${#dates.format(p.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
                             </tr>
-                            <tr th:if="${#lists.isEmpty(items)}"><td colspan="5" class="text-center p-4">No players</td></tr>
+                            <tr th:if="${#lists.isEmpty(items)}"><td colspan="6" class="text-center p-4">No players</td></tr>
                             </tbody>
                         </table>
                     </div>

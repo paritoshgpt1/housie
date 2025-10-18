@@ -57,52 +57,55 @@ public class OrganizerController {
 		return "organizer-details";
 	}
 
-	@PostMapping("/player-details")
-	public String playerDetails(@ModelAttribute PlayerForm playerForm, Model model) {
-		Organizer organizerDb = organizerRepository.findByCode(playerForm.getOrganizerCode());
-		model.addAttribute("organizer", organizerDb);
-		model.addAttribute("playerForm", playerForm);
+    @PostMapping("/player-details")
+    public String playerDetails(@ModelAttribute PlayerForm playerForm, Model model) {
+        Organizer organizerDb = organizerRepository.findByCode(playerForm.getOrganizerCode());
+        model.addAttribute("organizer", organizerDb);
+        model.addAttribute("playerForm", playerForm);
 
-		PlayerDetailsForm playerDetailsForm = new PlayerDetailsForm();
-		List<Player> playerList = new ArrayList<>(playerForm.getCount());
-		playerDetailsForm.setPlayers(playerList);
+        PlayerDetailsForm playerDetailsForm = new PlayerDetailsForm();
+        List<Player> playerList = new ArrayList<>(playerForm.getCount());
+        playerDetailsForm.setPlayers(playerList);
+        playerDetailsForm.setOrganizerCode(playerForm.getOrganizerCode());
 
 		model.addAttribute("playerDetailsForm", playerDetailsForm);
 
 		return "player-details";
 	}
 
-	@SneakyThrows
-	@PostMapping("/create-players")
-	public String createPlayers(@ModelAttribute PlayerDetailsForm playerDetailsForm, Model model) {
-		List<String> urls = new ArrayList<>();
-		for(Player player: playerDetailsForm.getPlayers()) {
-			// Maximum 6 tickets for each player
-			if (player.getTickets() > 6) {
-				player.setTickets(6);
-			}
+    @SneakyThrows
+    @PostMapping("/create-players")
+    public String createPlayers(@ModelAttribute PlayerDetailsForm playerDetailsForm, Model model) {
+        List<String> urls = new ArrayList<>();
+        Organizer organizer = organizerRepository.findByCode(playerDetailsForm.getOrganizerCode());
+        for(Player player: playerDetailsForm.getPlayers()) {
+            // Maximum 6 tickets for each player
+            if (player.getTickets() > 6) {
+                player.setTickets(6);
+            }
 
 			// Generate a unique player code with a few retries in case of race conditions
 			int attempts = 0;
 			boolean saved = false;
 			while (!saved && attempts < 10) {
 				attempts++;
-				String candidate = generateUniquePlayerCode();
-				player.setCode(candidate);
-				try {
-					playerRepository.save(player);
-					saved = true;
-				} catch (DataIntegrityViolationException ex) {
-					// Likely a unique constraint violation on code, retry with a new code
-				}
-			}
+                String candidate = generateUniquePlayerCode();
+                player.setCode(candidate);
+                player.setOrganizer(organizer);
+                try {
+                    playerRepository.save(player);
+                    saved = true;
+                } catch (DataIntegrityViolationException ex) {
+                    // Likely a unique constraint violation on code, retry with a new code
+                }
+            }
 
-			urls.add(generateUrl(player.getCode()));
-		}
-		model.addAttribute("players", playerDetailsForm.getPlayers());
-		model.addAttribute("urls", urls);
-		return "create-players";
-	}
+            urls.add(generateUrl(player.getCode()));
+        }
+        model.addAttribute("players", playerDetailsForm.getPlayers());
+        model.addAttribute("urls", urls);
+        return "create-players";
+    }
 
 	private String generateUniquePlayerCode() {
 		String code = RandomStringUtils.randomAlphanumeric(10);

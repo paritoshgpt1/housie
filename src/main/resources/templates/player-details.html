@@ -16,6 +16,7 @@ Please enter the player details: (Maximum 6 tickets for each player)
 </p>
 <br>
 <form action="#" th:action="@{/create-players}" th:object="${playerDetailsForm}"  method="post">
+    <input type="hidden" th:field="*{organizerCode}">
     <p th:each="i: ${#numbers.sequence(0, playerForm.count - 1)}">
         <label>
             Name

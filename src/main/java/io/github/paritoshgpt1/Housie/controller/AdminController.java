@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import io.github.paritoshgpt1.Housie.model.Round;
+import io.github.paritoshgpt1.Housie.repository.RoundRepository;
 
 @Controller
 @RequiredArgsConstructor
@@ -29,6 +31,7 @@ public class AdminController {
     private final PlayerRepository playerRepository;
     private final ClaimRepository claimRepository;
     private final TicketRepository ticketRepository;
+    private final RoundRepository roundRepository;
 
     @GetMapping
     public String adminHome() {
@@ -82,21 +85,33 @@ public class AdminController {
     @GetMapping("/players")
     public String listPlayers(
             @RequestParam(name = "q", required = false) String q,
+            @RequestParam(name = "org", required = false) String orgCode,
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "20") int size,
             Model model
     ) {
         Pageable pageable = PageRequest.of(Math.max(0, page), Math.max(1, size));
         Page<Player> players;
-        if (q != null && !q.trim().isEmpty()) {
+        Organizer selectedOrg = null;
+        if (orgCode != null && !orgCode.trim().isEmpty()) {
+            selectedOrg = organizerRepository.findByCode(orgCode.trim().toLowerCase());
+        }
+        if (selectedOrg != null && q != null && !q.trim().isEmpty()) {
+            players = playerRepository.findByOrganizerAndNameContainingIgnoreCase(selectedOrg, q.trim(), pageable);
+        } else if (selectedOrg != null) {
+            players = playerRepository.findByOrganizer(selectedOrg, pageable);
+        } else if (q != null && !q.trim().isEmpty()) {
             players = playerRepository.findByNameContainingIgnoreCase(q.trim(), pageable);
         } else {
             players = playerRepository.findAll(pageable);
         }
         model.addAttribute("q", q == null ? "" : q);
+        model.addAttribute("org", orgCode == null ? "" : orgCode);
         model.addAttribute("page", players);
         model.addAttribute("items", players.getContent());
         model.addAttribute("activePage", "players");
+        // Provide organizer list for filter dropdown
+        model.addAttribute("organizersAll", organizerRepository.findAll());
         return "admin-players";
     }
 
@@ -126,5 +141,19 @@ public class AdminController {
         model.addAttribute("items", tickets.getContent());
         model.addAttribute("activePage", "tickets");
         return "admin-tickets";
+    }
+
+    @GetMapping("/rounds")
+    public String listRounds(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "20") int size,
+            Model model
+    ) {
+        Pageable pageable = PageRequest.of(Math.max(0, page), Math.max(1, size));
+        Page<Round> rounds = roundRepository.findAll(pageable);
+        model.addAttribute("page", rounds);
+        model.addAttribute("items", rounds.getContent());
+        model.addAttribute("activePage", "rounds");
+        return "admin-rounds";
     }
 }

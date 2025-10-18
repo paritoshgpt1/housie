@@ -35,16 +35,23 @@
             <h5 class="sidebar-title item-label">Admin</h5>
         </div>
         <div class="sidebar-body">
+            <!-- Admin utilities -->
             <div class="list-group">
                 <a class="list-group-item list-group-item-action"
                    th:classappend="${activePage}=='validators' ? ' active'"
                    href="/admin/validators"><span class="item-label">Validators Status</span></a>
                 <a class="list-group-item list-group-item-action"
-                   th:classappend="${activePage}=='organizers-list' ? ' active'"
-                   href="/admin/organizers"><span class="item-label">Organizers</span></a>
-                <a class="list-group-item list-group-item-action"
                    th:classappend="${activePage}=='organizers' ? ' active'"
                    href="/admin/organizers/new"><span class="item-label">New Organizer</span></a>
+            </div>
+
+            <!-- Data tables -->
+            <hr>
+            <h6 class="text-muted item-label">Data Tables</h6>
+            <div class="list-group small">
+                <a class="list-group-item list-group-item-action"
+                   th:classappend="${activePage}=='organizers-list' ? ' active'"
+                   href="/admin/organizers"><span class="item-label">Organizers</span></a>
                 <a class="list-group-item list-group-item-action"
                    th:classappend="${activePage}=='players' ? ' active'"
                    href="/admin/players"><span class="item-label">Players</span></a>
@@ -54,7 +61,12 @@
                 <a class="list-group-item list-group-item-action"
                    th:classappend="${activePage}=='tickets' ? ' active'"
                    href="/admin/tickets"><span class="item-label">Tickets</span></a>
+                <a class="list-group-item list-group-item-action"
+                   th:classappend="${activePage}=='rounds' ? ' active'"
+                   href="/admin/rounds"><span class="item-label">Rounds</span></a>
             </div>
+
+            <!-- Public pages -->
             <hr>
             <h6 class="text-muted item-label">Public Pages</h6>
             <div class="list-group small">
