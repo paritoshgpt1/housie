@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>Public Fragments</title>
+</head>
+<body>
+
+<!-- Head includes for public pages -->
+<div th:fragment="head(title)">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title}">Housie</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+</div>
+
+<!-- Footer scripts for public pages (optional) -->
+<div th:fragment="scripts">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+</div>
+
+</body>
+</html>
+

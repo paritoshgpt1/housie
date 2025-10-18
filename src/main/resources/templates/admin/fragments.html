@@ -40,8 +40,20 @@
                    th:classappend="${activePage}=='validators' ? ' active'"
                    href="/admin/validators"><span class="item-label">Validators Status</span></a>
                 <a class="list-group-item list-group-item-action"
+                   th:classappend="${activePage}=='organizers-list' ? ' active'"
+                   href="/admin/organizers"><span class="item-label">Organizers</span></a>
+                <a class="list-group-item list-group-item-action"
                    th:classappend="${activePage}=='organizers' ? ' active'"
                    href="/admin/organizers/new"><span class="item-label">New Organizer</span></a>
+                <a class="list-group-item list-group-item-action"
+                   th:classappend="${activePage}=='players' ? ' active'"
+                   href="/admin/players"><span class="item-label">Players</span></a>
+                <a class="list-group-item list-group-item-action"
+                   th:classappend="${activePage}=='claims' ? ' active'"
+                   href="/admin/claims"><span class="item-label">Claims</span></a>
+                <a class="list-group-item list-group-item-action"
+                   th:classappend="${activePage}=='tickets' ? ' active'"
+                   href="/admin/tickets"><span class="item-label">Tickets</span></a>
             </div>
             <hr>
             <h6 class="text-muted item-label">Public Pages</h6>
@@ -50,7 +62,6 @@
                 <a class="list-group-item list-group-item-action" href="/game-board"><span class="item-label">Game Board</span></a>
                 <a class="list-group-item list-group-item-action" href="/dividends"><span class="item-label">Dividends</span></a>
                 <a class="list-group-item list-group-item-action" href="/organizer"><span class="item-label">Organizer</span></a>
-                <a class="list-group-item list-group-item-action" href="/ticket-input?count=1"><span class="item-label">Ticket Input (1)</span></a>
             </div>
         </div>
     </div>
