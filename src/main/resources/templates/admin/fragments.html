@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>Admin Fragments</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <style>
+        /* Layout wrapper */
+        .admin-layout { display: flex; min-height: 100vh; }
+        /* Remove default container padding for admin pages to avoid left gap */
+        .admin-container { padding-left: 0; padding-right: 0; }
+        /* Remove browser default body margin on admin pages */
+        body.admin { margin: 0 !important; }
+        /* Sidebar: collapses to a slim rail */
+        #adminSidebar { width: 260px; transition: width .2s ease-in-out; overflow: hidden; }
+        .sidebar-collapsed #adminSidebar { width: 56px; }
+        /* Main content grows to fill remaining space */
+        #adminMain { flex: 1 1 auto; min-width: 0; transition: all .2s ease-in-out; }
+        /* Hide all sidebar body and title when collapsed; keep only hamburger button visible */
+        .sidebar-collapsed #adminSidebar .sidebar-title { display: none !important; }
+        .sidebar-collapsed #adminSidebar .sidebar-body { display: none !important; }
+        /* Optional: hide individual item labels if needed when not fully hidden */
+        .sidebar-collapsed #adminSidebar .item-label { display: none; }
+        .sidebar-header { display: flex; align-items: center; justify-content: space-between; }
+        .sidebar-title { margin: 0; font-size: 1rem; }
+    </style>
+</head>
+<body>
+
+<!-- Sidebar fragment -->
+<nav th:fragment="sidebar(activePage)" id="adminSidebar" class="admin-sidebar bg-white border-right">
+    <div class="sidebar-sticky p-3">
+        <div class="sidebar-header mb-3">
+            <button id="sidebarToggle" class="btn btn-outline-secondary btn-sm" aria-label="Collapse sidebar">&#9776;</button>
+            <h5 class="sidebar-title item-label">Admin</h5>
+        </div>
+        <div class="sidebar-body">
+            <div class="list-group">
+                <a class="list-group-item list-group-item-action"
+                   th:classappend="${activePage}=='validators' ? ' active'"
+                   href="/admin/validators"><span class="item-label">Validators Status</span></a>
+                <a class="list-group-item list-group-item-action"
+                   th:classappend="${activePage}=='organizers' ? ' active'"
+                   href="/admin/organizers/new"><span class="item-label">New Organizer</span></a>
+            </div>
+            <hr>
+            <h6 class="text-muted item-label">Public Pages</h6>
+            <div class="list-group small">
+                <a class="list-group-item list-group-item-action" href="/welcome"><span class="item-label">Welcome</span></a>
+                <a class="list-group-item list-group-item-action" href="/game-board"><span class="item-label">Game Board</span></a>
+                <a class="list-group-item list-group-item-action" href="/dividends"><span class="item-label">Dividends</span></a>
+                <a class="list-group-item list-group-item-action" href="/organizer"><span class="item-label">Organizer</span></a>
+                <a class="list-group-item list-group-item-action" href="/ticket-input?count=1"><span class="item-label">Ticket Input (1)</span></a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Scripts fragment -->
+<div th:fragment="scripts">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="/assets/js/admin-common.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</div>
+
+<!-- Head fragment (styles and base includes) -->
+<div th:fragment="head">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <style>
+        #adminSidebar { transition: width .2s ease-in-out; flex: 0 0 260px !important; max-width: 260px !important; }
+        .sidebar-collapsed #adminSidebar { flex: 0 0 56px !important; max-width: 56px !important; }
+        #adminMain { transition: all .2s ease-in-out; flex: 1 1 auto !important; max-width: calc(100% - 260px) !important; }
+        .sidebar-collapsed #adminMain { max-width: calc(100% - 56px) !important; }
+        .sidebar-collapsed #adminSidebar .item-label { display: none; }
+        .sidebar-header { display: flex; align-items: center; justify-content: space-between; }
+        .sidebar-title { margin: 0; font-size: 1rem; }
+    </style>
+</div>
+
+</body>
+</html>

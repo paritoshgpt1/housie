@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dividends Validator Check</title>
+    <div th:replace="admin/fragments :: head"></div>
+    <style>
+        .status-ok { color: #155724; background-color: #d4edda; }
+        .status-missing { color: #721c24; background-color: #f8d7da; }
+        .small { font-size: 0.85rem; }
+    </style>
+    <meta name="robots" content="noindex,nofollow">
+    <meta http-equiv="Cache-Control" content="no-store"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="referrer" content="no-referrer"/>
+    <meta http-equiv="X-Content-Type-Options" content="nosniff"/>
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN"/>
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block"/>
+    <meta name="description" content="Admin-only: dividends vs validator implementation status"/>
+    <meta name="format-detection" content="telephone=no"/>
+</head>
+<body class="bg-light admin">
+<div class="container-fluid admin-container">
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <div th:replace="admin/fragments :: sidebar('validators')"></div>
+
+        <!-- Main content -->
+        <main id="adminMain" role="main" class="admin-main px-4 py-4">
+            <div class="d-flex align-items-center mb-3">
+                <h3 class="mb-0">Dividends Validator Check</h3>
+                <span class="ml-3 small text-muted">Shows which dividend codes have a client validator implemented.</span>
+            </div>
+            <div class="card">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-sm mb-0" id="validatorsTable">
+                            <thead class="thead-light">
+                            <tr>
+                                <th style="width:40%">Name</th>
+                                <th style="width:30%">Code</th>
+                                <th style="width:30%">Validator</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr><td colspan="3" class="text-center p-4">Loading…</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-3 small text-muted">
+                Note: This checks for a client-side validator method named exactly as the dividend code on <code>Validate.prototype</code>.
+            </div>
+            <div class="mt-1 small text-muted">
+                For security, consider adding server-side validators as the source of truth.
+            </div>
+            <div class="mt-2">
+                <button class="btn btn-sm btn-outline-secondary" id="refreshBtn">Refresh</button>
+            </div>
+            <div class="mt-3" id="summary" style="display:none"></div>
+            <div class="mt-3" id="missingList" style="display:none"></div>
+        </main>
+    </div>
+</div>
+<div th:replace="admin/fragments :: scripts"></div>
+<script type="text/javascript" src="/assets/js/validate.js"></script>
+<script type="text/javascript" src="/assets/js/admin-validators.js"></script>
+</body>
+</html>

@@ -16,74 +16,22 @@ class Validate {
     }
 
     // function checkDividends: checks if the player has hit any dividend
+    // 'claim' is the dividend 'code' from backend (snake_case)
     checkDividends(claim, ticketNumber) {
         this.claim = claim;
         this.ticketNumber = ticketNumber;
-        switch (claim) {
-            case "early7":
-                this.checkForEarly7();
-                break;
-            case "4corners":
-                this.checkfor4Corners();
-                break;
-            case "bamboo":
-                this.checkforBamboo();
-                break;
-            case "l":
-                this.checkforL();
-                break;
-            case "t":
-                this.checkforT();
-                break;
-            case "h":
-                this.checkforH();
-                break;
-            case "topline":
-                this.checkforTopLine();
-                break;
-            case "middleline":
-                this.checkforMiddleLine();
-                break;
-            case "bottomline":
-                this.checkforBotttomLine();
-                break;
-            case "breakfast":
-                this.checkforBreakfast();
-                break;
-            case "lunch":
-                this.checkforLunch();
-                break;
-            case "dinner":
-                this.checkforDinner();
-                break;
-            case "zona":
-                this.checkforZona();
-                break;
-            case "temp":
-                this.checkforTemperature();
-                break;
-            case "pyramid":
-                this.checkforPyramid();
-                break;
-            case "raindrop":
-                this.checkforRaindrop();
-                break;
-            case "younger":
-                this.checkforYounger();
-                break;
-            case "older":
-                this.checkforOlder();
-                break;
-            case "fullhouse":
-                this.checkforFullHouse();
-                break;
-            default:
-                alert("Invalid Claim");
+        const fn = this[claim];
+        if (typeof fn === 'function') {
+            fn.call(this);
+        } else {
+            console.warn('No validator implemented for claim code:', claim);
+            alert('Validation for this claim is not available yet.');
         }
     }
 
     // function checkForEarly7: checks if the player has hit the Early7 dividend
-    checkForEarly7() {
+    // early_7: Any seven numbers on the ticket are called, including current
+    early_7() {
         if (this.checkNumbersMarked(this.ticketNumbers.flat(), 7)) {
             alert("Early 7 correctly claimed");
             this.correctlyClaimed();
@@ -92,7 +40,8 @@ class Validate {
         }
     }
 
-    checkfor4Corners() {
+    // four_corners: four corner numbers are called
+    four_corners() {
         let numbersToCheck = [];
         numbersToCheck.push(this.ticketNumbers[0][0]);
         numbersToCheck.push(this.ticketNumbers[0][4]);
@@ -106,7 +55,8 @@ class Validate {
         }
     }
 
-    checkforBamboo() {
+    // bamboo: center column all three numbers are called
+    bamboo() {
         let numbersToCheck = [];
         numbersToCheck.push(this.ticketNumbers[0][2]);
         numbersToCheck.push(this.ticketNumbers[1][2]);
@@ -119,7 +69,8 @@ class Validate {
         }
     }
 
-    checkforL() {
+    // l: left column + entire bottom row
+    l() {
         let numbersToCheck = [];
         numbersToCheck.push(this.ticketNumbers[0][0]);
         numbersToCheck.push(this.ticketNumbers[1][0]);
@@ -132,7 +83,8 @@ class Validate {
         }
     }
 
-    checkforT() {
+    // t: top row + center column
+    t() {
         let numbersToCheck = [];
         numbersToCheck = numbersToCheck.concat(this.ticketNumbers[0]);
         numbersToCheck.push(this.ticketNumbers[1][2]);
@@ -145,7 +97,8 @@ class Validate {
         }
     }
 
-    checkforH() {
+    // h: left column + middle row + right column
+    h() {
         let numbersToCheck = [];
         numbersToCheck.push(this.ticketNumbers[0][0]);
         numbersToCheck.push(this.ticketNumbers[2][0]);
@@ -160,7 +113,8 @@ class Validate {
         }
     }
 
-    checkforTopLine() {
+    // top_line: top row
+    top_line() {
         if (this.checkAllNumbersMarked(this.ticketNumbers[0])) {
             alert("Top Line correctly claimed");
             this.correctlyClaimed();
@@ -169,7 +123,8 @@ class Validate {
         }
     }
 
-    checkforMiddleLine() {
+    // middle_line: middle row
+    middle_line() {
         if (this.checkAllNumbersMarked(this.ticketNumbers[1])) {
             alert("Middle Line correctly claimed");
             this.correctlyClaimed();
@@ -178,7 +133,8 @@ class Validate {
         }
     }
 
-    checkforBotttomLine() {
+    // bottom_line: bottom row
+    bottom_line() {
         if (this.checkAllNumbersMarked(this.ticketNumbers[2])) {
             alert("Bottom Line correctly claimed");
             this.correctlyClaimed();
@@ -187,7 +143,8 @@ class Validate {
         }
     }
 
-    checkforZona() {
+    // zona: none of the numbers on ticket have been called
+    zona() {
         let numbersToCheck = this.ticketNumbers.flat();
         for (let i = 0; i < numbersToCheck.length; i++) {
             if(this.roundNumbers.has(numbersToCheck[i])) {
@@ -199,7 +156,8 @@ class Validate {
         this.correctlyClaimed();
     }
 
-    checkforTemperature() {
+    // temp: min and max numbers on ticket are called
+    temp() {
         let numbersToCheck = [];
         numbersToCheck.push(Math.min.apply(this, this.ticketNumbers.flat()));
         numbersToCheck.push(Math.max.apply(this, this.ticketNumbers.flat()));
@@ -211,7 +169,8 @@ class Validate {
         }
     }
 
-    checkforPyramid() {
+    // pyramid: top center, middle-left/right, and bottom row
+    pyramid() {
         let numbersToCheck = [];
         numbersToCheck.push(this.ticketNumbers[0][2]);
         numbersToCheck.push(this.ticketNumbers[1][1]);
@@ -227,7 +186,8 @@ class Validate {
         }
     }
 
-    checkforFullHouse() {
+    // full_house: all numbers on ticket
+    full_house() {
         if (this.checkAllNumbersMarked(this.ticketNumbers.flat())) {
             alert("Full House correctly claimed");
             this.correctlyClaimed();
@@ -236,7 +196,8 @@ class Validate {
         }
     }
 
-    checkforBreakfast(){
+    // breakfast: first three columns (non-zero cells)
+    breakfast(){
         if (this.checkForBLD(0, 2)) {
             alert("Breakfast correctly claimed");
             this.correctlyClaimed();
@@ -244,7 +205,8 @@ class Validate {
             this.boogie();
         }
     }
-    checkforLunch(){
+    // lunch: middle three columns
+    lunch(){
         if (this.checkForBLD(3, 5)) {
             alert("Lunch correctly claimed");
             this.correctlyClaimed();
@@ -252,7 +214,8 @@ class Validate {
             this.boogie();
         }
     }
-    checkforDinner(){
+    // dinner: last three columns
+    dinner(){
         if (this.checkForBLD(6, 8)) {
             alert("Dinner correctly claimed");
             this.correctlyClaimed();
@@ -273,7 +236,8 @@ class Validate {
         return this.checkAllNumbersMarked(numbersToCheck);
     }
 
-    checkforYounger(){
+    // younger: all numbers <= 45
+    younger(){
         let allNumbers = this.ticketNumbers.flat();
         let numbersToCheck = [];
         let indexCount = 0;
@@ -290,7 +254,8 @@ class Validate {
             this.boogie();
         }
     }
-    checkforOlder(){
+    // older: all numbers > 45
+    older(){
         let allNumbers = this.ticketNumbers.flat();
         let numbersToCheck = [];
         let indexCount = 0;
@@ -307,7 +272,8 @@ class Validate {
             this.boogie();
         }
     }
-    checkforRaindrop(){
+    // raindrop: at least one number per column, must include current number
+    raindrop(){
         let currentNumberPresent = false;
         for (let j = 0; j < 9; j++) {
             let numberMarkedInColumn = false;

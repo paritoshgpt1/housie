@@ -38,4 +38,9 @@ public class GameBoardController {
 		model.addAttribute("dividends", IterableUtils.toList(dividends));
 		return "dividends";
 	}
+
+	@GetMapping("/admin/validators")
+	public String adminValidators() {
+		return "admin-validators";
+	}
 }

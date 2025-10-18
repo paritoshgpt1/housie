@@ -183,6 +183,25 @@ $(function () {
     // Initialize board and selections
     populateBoardNumbers();
     restoreSelections();
+    // Load claims (dividends) dynamically and populate dropdown
+    function loadDividends() {
+        const $claim = $('#claim');
+        // show loading placeholder
+        $claim.empty().append($('<option disabled selected>').text('Loading...'));
+        $.get('/api/dividends')
+            .done(function(items){
+                $claim.empty();
+                (items || []).forEach(function(div){
+                    // value is authoritative code used by validators
+                    $('<option>').val(div.code).text(div.name).appendTo($claim);
+                });
+            })
+            .fail(function(){
+                // keep existing options if request fails
+                console.warn('Failed to load dividends; using fallback options');
+            });
+    }
+    loadDividends();
     // Load allowed voices config, then populate voices
     $.when(loadAllowedVoices()).always(function () {
         initVoiceDropdown();
