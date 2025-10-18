@@ -48,9 +48,9 @@ Housie is a popular number-based game where players mark numbers on their ticket
 ### Prerequisites
 - Java 17 runtime (for Docker image) or Java 8+ locally
 - Maven 3.8+
-- PostgreSQL database (local or Neon)
+- PostgreSQL database (local for development)
 
-### Run Locally (Maven)
+### Run Locally (Maven, Local Postgres)
 
 1) Clone
    ```bash
@@ -58,18 +58,25 @@ Housie is a popular number-based game where players mark numbers on their ticket
    cd Housie
    ```
 
-2) Set env vars (terminal session)
+2) Create a local DB (examples)
    ```bash
+   createdb housie || psql -c 'CREATE DATABASE housie;'
+   # Ensure you have a Postgres user/password to connect locally
+   ```
+
+3) Run against local DB
+   ```bash
+   # Option A: via Makefile (recommended)
+   # Defaults: DB_HOST=localhost DB_NAME=housie DB_USER=postgres DB_SSLMODE=disable
+   make run-local DB_USER=<your_user> DB_PASS=<your_password>
+
+   # Option B: via Maven with env vars
    export SPRING_DATASOURCE_URL="jdbc:postgresql://localhost:5432/housie?sslmode=disable"
-   export SPRING_DATASOURCE_USERNAME="your_username"
-   export SPRING_DATASOURCE_PASSWORD="your_password"
+   export SPRING_DATASOURCE_USERNAME="<your_user>"
+   export SPRING_DATASOURCE_PASSWORD="<your_password>"
    export SPRING_JPA_HIBERNATE_DDL_AUTO=update
    export CUSTOM_SCHEME=http
    export CUSTOM_HOST=localhost:8080
-   ```
-
-3) Run
-   ```bash
    mvn spring-boot:run
    ```
 
@@ -82,18 +89,12 @@ Notes
 - `server.port` honors `PORT` if set; defaults to 8080.
 - The app reads datasource username/password from env; you can also embed them in the JDBC URL.
 
-### Run Locally (Docker)
+### Run Locally (Docker, Local Postgres)
 
 ```bash
 docker build -t housie:local .
-docker run --rm -p 8080:8080 \
-  -e SPRING_DATASOURCE_URL="jdbc:postgresql://localhost:5432/housie?sslmode=disable" \
-  -e SPRING_DATASOURCE_USERNAME="your_username" \
-  -e SPRING_DATASOURCE_PASSWORD="your_password" \
-  -e SPRING_JPA_HIBERNATE_DDL_AUTO=update \
-  -e CUSTOM_SCHEME=http \
-  -e CUSTOM_HOST=localhost:8080 \
-  housie:local
+# Using Makefile with local DB
+make docker-run DB_USER=<your_user> DB_PASS=<your_password>
 ```
 
 Open `http://localhost:8080/welcome`.
@@ -136,6 +137,7 @@ password=... (your Neon password)
 - Tail logs: `render logs -r <serviceId> --type runtime --output text --limit 200`.
 
 ### Troubleshooting
+- Local DB connection errors: confirm Postgres is running and credentials are correct.
 - `UnknownHostException` for Neon: remove quotes/newlines from `SPRING_DATASOURCE_URL` and ensure `sslmode=require`.
 - Startup fails on Render with `${PORT}`: Dockerfile uses `sh -c` to expand `$PORT` and passes it to webapp-runner; ensure you’re on latest.
 - Health failing: verify `/welcome` returns 200 and DB env vars are set.
