@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DividendRepository extends CrudRepository<Dividend, Integer> {
     Iterable<Dividend> findByOrderById();
+    Dividend findByCode(String code);
 }
