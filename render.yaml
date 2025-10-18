@@ -3,7 +3,7 @@ services:
     name: housie
     env: docker
     plan: free
-    healthCheckPath: /
+    healthCheckPath: /welcome
     envVars:
       # Database (set these in Render dashboard or when deploying the Blueprint)
       - key: SPRING_DATASOURCE_URL
