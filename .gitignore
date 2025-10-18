@@ -32,4 +32,13 @@ build/
 
 application-local.properties
 
+# Local env and logs
+.env
+.env.*
+*.log
+*.pid
+dup_check.txt
+.DS_Store
+src/**/.DS_Store
+
 .DS_Store
