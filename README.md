@@ -64,20 +64,13 @@ Housie is a popular number-based game where players mark numbers on their ticket
    # Ensure you have a Postgres user/password to connect locally
    ```
 
-3) Run against local DB
+3) Run with the "local" Spring profile (uses application-local.properties)
    ```bash
    # Option A: via Makefile (recommended)
-   # Defaults: DB_HOST=localhost DB_NAME=housie DB_USER=postgres DB_SSLMODE=disable
-   make run-local DB_USER=<your_user> DB_PASS=<your_password>
+   make run-local
 
-   # Option B: via Maven with env vars
-   export SPRING_DATASOURCE_URL="jdbc:postgresql://localhost:5432/housie?sslmode=disable"
-   export SPRING_DATASOURCE_USERNAME="<your_user>"
-   export SPRING_DATASOURCE_PASSWORD="<your_password>"
-   export SPRING_JPA_HIBERNATE_DDL_AUTO=update
-   export CUSTOM_SCHEME=http
-   export CUSTOM_HOST=localhost:8080
-   mvn spring-boot:run
+   # Option B: via Maven directly
+   mvn -DskipTests spring-boot:run -Dspring-boot.run.profiles=local
    ```
 
 4) Open
@@ -98,6 +91,8 @@ make docker-run DB_USER=<your_user> DB_PASS=<your_password>
 ```
 
 Open `http://localhost:8080/welcome`.
+
+Note: The "local" profile reads `src/main/resources/application-local.properties`. Update that file with your local Postgres username/password if needed.
 
 ## ☁️ Deploy: Neon + Render
 

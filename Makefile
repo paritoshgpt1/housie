@@ -26,14 +26,8 @@ help:
 
 .PHONY: run-local
 run-local:
-	@echo "Running with local Postgres: $$DB_USER@$$DB_HOST/$$DB_NAME (sslmode=$(DB_SSLMODE))"
-	 SPRING_DATASOURCE_URL="jdbc:postgresql://$(DB_HOST):5432/$(DB_NAME)?sslmode=$(DB_SSLMODE)" \
-	 SPRING_DATASOURCE_USERNAME="$(DB_USER)" \
-	 SPRING_DATASOURCE_PASSWORD="$(DB_PASS)" \
-	 SPRING_JPA_HIBERNATE_DDL_AUTO=update \
-	 CUSTOM_SCHEME=http \
-	 CUSTOM_HOST=localhost:$(PORT) \
-	 mvn -DskipTests spring-boot:run
+	@echo "Running with Spring profile: local (uses src/main/resources/application-local.properties)"
+	 mvn -DskipTests spring-boot:run -Dspring-boot.run.profiles=local
 
 .PHONY: run-neon
 run-neon:
