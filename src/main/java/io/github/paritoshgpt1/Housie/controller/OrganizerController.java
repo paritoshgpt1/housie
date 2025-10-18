@@ -10,6 +10,7 @@ import io.github.paritoshgpt1.Housie.repository.OrganizerRepository;
 import io.github.paritoshgpt1.Housie.repository.PlayerRepository;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -76,19 +77,39 @@ public class OrganizerController {
 	public String createPlayers(@ModelAttribute PlayerDetailsForm playerDetailsForm, Model model) {
 		List<String> urls = new ArrayList<>();
 		for(Player player: playerDetailsForm.getPlayers()) {
-			player.setCode(RandomStringUtils.randomAlphanumeric(10));
-
 			// Maximum 6 tickets for each player
 			if (player.getTickets() > 6) {
 				player.setTickets(6);
 			}
 
-			playerRepository.save(player);
+			// Generate a unique player code with a few retries in case of race conditions
+			int attempts = 0;
+			boolean saved = false;
+			while (!saved && attempts < 10) {
+				attempts++;
+				String candidate = generateUniquePlayerCode();
+				player.setCode(candidate);
+				try {
+					playerRepository.save(player);
+					saved = true;
+				} catch (DataIntegrityViolationException ex) {
+					// Likely a unique constraint violation on code, retry with a new code
+				}
+			}
+
 			urls.add(generateUrl(player.getCode()));
 		}
 		model.addAttribute("players", playerDetailsForm.getPlayers());
 		model.addAttribute("urls", urls);
 		return "create-players";
+	}
+
+	private String generateUniquePlayerCode() {
+		String code = RandomStringUtils.randomAlphanumeric(10);
+		while (playerRepository.findPlayerByCode(code) != null) {
+			code = RandomStringUtils.randomAlphanumeric(10);
+		}
+		return code;
 	}
 
 	private String generateUrl(String code) {
