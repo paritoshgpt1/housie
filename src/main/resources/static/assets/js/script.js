@@ -229,20 +229,100 @@ $(document).ready(function(){
 //         popupWin.document.close();
 //     }
 
+    // LocalStorage persistence for crossed numbers on tickets page
+    function getCodeFromUrl() {
+        var search = window.location.search || "";
+        if (search.charAt(0) === '?') search = search.substring(1);
+        var parts = search.split('&');
+        for (var i = 0; i < parts.length; i++) {
+            var kv = parts[i].split('=');
+            if (decodeURIComponent(kv[0] || '') === 'code') {
+                return decodeURIComponent(kv[1] || '');
+            }
+        }
+        return null;
+    }
 
-    $('.number').click(function(){
-        $(this).toggleClass("crossed");
-    });
+    function getStorageKey(code) {
+        return 'tickets-crossed:' + code;
+    }
 
+    function loadState(code) {
+        var key = getStorageKey(code);
+        try {
+            var raw = localStorage.getItem(key);
+            return raw ? JSON.parse(raw) : {};
+        } catch (e) {
+            return {};
+        }
+    }
 
-    // $('#newCard').click(function(){
-    //     clear();
-    //     publish();
-    // });
-    //
-    // $('#printBut').click(function(){
-    //     printDiv()
-    // });
-    //
+    function saveState(code, state) {
+        var key = getStorageKey(code);
+        localStorage.setItem(key, JSON.stringify(state));
+    }
+
+    var code = getCodeFromUrl();
+    // Only run on tickets page where code is present
+    if (code) {
+        var state = loadState(code); // { [ticketId]: [numbers...] }
+
+        // Initialize UI from saved state
+        $("table.innerTable[data-ticket-id]").each(function() {
+            var $table = $(this);
+            var ticketId = String($table.attr('data-ticket-id'));
+            var crossed = state[ticketId] || [];
+            if (crossed && crossed.length) {
+                // Mark any stored numbers as crossed
+                $table.find('td.number').each(function() {
+                    var $td = $(this);
+                    var $span = $td.find('.ticket-cell');
+                    if ($span.length) {
+                        var num = String($span.attr('data-number'));
+                        if (crossed.indexOf(num) !== -1) {
+                            $td.addClass('crossed');
+                        }
+                    }
+                });
+            }
+        });
+
+        // Click handler to toggle cross and persist state
+        $('td.number').click(function() {
+            var $td = $(this);
+            var $table = $td.closest('table.innerTable');
+            var ticketId = String($table.attr('data-ticket-id'));
+            var $span = $td.find('.ticket-cell');
+            if (!$span.length) return;
+            var num = String($span.attr('data-number'));
+
+            // Toggle class
+            var nowCrossed = !$td.hasClass('crossed');
+            $td.toggleClass('crossed');
+
+            // Update state
+            var crossed = state[ticketId] || [];
+            var idx = crossed.indexOf(num);
+            if (nowCrossed) {
+                if (idx === -1) crossed.push(num);
+            } else {
+                if (idx !== -1) crossed.splice(idx, 1);
+            }
+            state[ticketId] = crossed;
+            saveState(code, state);
+        });
+
+        // Clear button: remove all crosses and clear localStorage state for this code
+        $('#clearCrosses').click(function() {
+            $('td.number.crossed').removeClass('crossed');
+            state = {};
+            localStorage.removeItem(getStorageKey(code));
+        });
+    } else {
+        // Fallback: maintain original toggle behavior when no code param
+        $('td.number').click(function() {
+            $(this).toggleClass('crossed');
+        });
+    }
 
 });
