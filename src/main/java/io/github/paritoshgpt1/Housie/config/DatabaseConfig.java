@@ -16,10 +16,22 @@ public class DatabaseConfig {
     @Value("${spring.datasource.url}")
     private String dbUrl;
 
+    @Value("${spring.datasource.username:}")
+    private String dbUsername;
+
+    @Value("${spring.datasource.password:}")
+    private String dbPassword;
+
     @Bean
     public DataSource dataSource() {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(dbUrl);
+        if (dbUsername != null && !dbUsername.isEmpty()) {
+            config.setUsername(dbUsername);
+        }
+        if (dbPassword != null && !dbPassword.isEmpty()) {
+            config.setPassword(dbPassword);
+        }
         return new HikariDataSource(config);
     }
 }
