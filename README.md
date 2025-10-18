@@ -40,7 +40,7 @@ Housie is a popular number-based game where players mark numbers on their ticket
 - **Database**: PostgreSQL
 - **Frontend**: Thymeleaf + Bootstrap CSS
 - **Build Tool**: Maven
-- **Deployment**: Heroku-ready
+ 
 - **Java Version**: 1.8
 
 ## 🚀 Getting Started
@@ -133,9 +133,9 @@ password=... (your Neon password)
 - Tail logs: `render logs -r <serviceId> --type runtime --output text --limit 200`.
 
 ### Troubleshooting
-- Local DB connection errors: confirm Postgres is running and credentials are correct.
-- `UnknownHostException` for Neon: remove quotes/newlines from `SPRING_DATASOURCE_URL` and ensure `sslmode=require`.
-- Startup fails on Render with `${PORT}`: Dockerfile uses `sh -c` to expand `$PORT` and passes it to webapp-runner; ensure you’re on latest.
+ - Local DB connection errors: confirm Postgres is running and credentials are correct.
+ - `UnknownHostException` for Neon: remove quotes/newlines from `SPRING_DATASOURCE_URL` and ensure `sslmode=require`.
+ - Ensure your platform sets `PORT` env var or override via `SERVER_PORT` or `SPRING_APPLICATION_JSON`.
 - Health failing: verify `/welcome` returns 200 and DB env vars are set.
 
 ## 🎯 How to Play

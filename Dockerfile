@@ -9,9 +9,7 @@ RUN mvn -DskipTests package
 FROM eclipse-temurin:17-jre
 WORKDIR /app
 ENV PORT=8080
-COPY --from=build /workspace/target/Housie-0.0.1-SNAPSHOT.war /app/app.war
-COPY --from=build /workspace/target/dependency/webapp-runner.jar /app/webapp-runner.jar
-# server.port is configured to use ${PORT:8080} in application.properties
+COPY --from=build /workspace/target/Housie-0.0.1-SNAPSHOT.jar /app/app.jar
+# server.port uses ${PORT:8080} in application.properties; no need to pass as arg
 EXPOSE 8080
-# Use shell form so $PORT expands at runtime
-CMD ["sh", "-c", "java -jar /app/webapp-runner.jar --port ${PORT:-8080} /app/app.war"]
+CMD ["java", "-jar", "/app/app.jar"]
