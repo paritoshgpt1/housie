@@ -43,6 +43,42 @@ Housie is a popular number-based game where players mark numbers on their ticket
  
 - **Java Version**: 1.8
 
+## 🖨️ Headless PDF (Chromium)
+
+The Docker image now includes headless Chromium to enable high‑fidelity HTML→PDF rendering (and is compatible with libraries that shell out to Chrome or use the DevTools protocol).
+
+- Binary: available as `chromium` and `google-chrome` inside the container.
+- Default flags: `--headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage` (via `CHROME_FLAGS`).
+- Env vars you can use from the app:
+  - `CHROME_PATH=/usr/bin/chromium`
+  - `CHROME_FLAGS=--headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage`
+
+Example CLI usage inside the container (prints a URL to PDF):
+
+```bash
+google-chrome $CHROME_FLAGS --print-to-pdf=/tmp/out.pdf https://example.com
+```
+
+If your app uses a Java library that relies on an installed Chrome (e.g., via DevTools), no extra setup is required in Docker.
+
+Optional (image previews): If you need a PNG/JPEG preview of the generated PDF, consider adding `poppler-utils` and running `pdftoppm` to convert pages to images.
+
+### Endpoints
+- `GET /generate-tickets.pdf?code=<playerCode>`: downloads a PDF of the tickets.
+- `GET /generate-tickets.png?code=<playerCode>`: downloads a PNG image (first page of the PDF) for quick sharing/preview.
+
+Chromium is used by default for PDF rendering when available; the app falls back to a pure Java renderer if Chrome is unavailable.
+
+### Local vs. Render
+- Local (Maven): Works even without Chrome via the pure-Java fallback.
+  - Optional: install Chrome/Chromium, or set `CHROME_PATH` to point to it.
+  - Force fallback: set `PDF_RENDERER=openhtml` when running Maven.
+    - Example: `PDF_RENDERER=openhtml mvn -DskipTests spring-boot:run -Dspring-boot.run.profiles=local`
+- Render (Docker): The Docker image includes Chromium, so `PDF_RENDERER=auto` (default) uses it.
+
+Diagnostics
+- If Chromium fails, the server logs include Chrome stderr. You can also enforce a renderer via `PDF_RENDERER=chromium|openhtml`.
+
 ## 🚀 Getting Started
 
 ### Prerequisites

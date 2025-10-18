@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <title>Tickets Print Preview</title>
+  <style>
+    :root {
+      --scale: 1.1;
+      --page-margin: 6mm;
+      --title-size: 14px;
+      --label-size: 16px;
+      --cell-font: 20px;
+      --cell-w: 28px;
+      --cell-h: 22px;
+      --cell-border: 3px;
+      --table-spacing: 5px;
+    }
+
+    body { font-family: Arial, sans-serif; color: #333; margin: 0; }
+    .controls { position: sticky; top: 0; z-index: 10; background: #f7f7f7; border-bottom: 1px solid #ddd; padding: 8px; display: flex; gap: 12px; align-items: center; font-size: 13px; }
+    .controls label { display: inline-flex; align-items: center; gap: 6px; }
+    .controls input[type="range"] { width: 160px; }
+    .controls .spacer { flex: 1; }
+    .controls .btn { padding: 6px 10px; border: 1px solid #333; background: #fff; cursor: pointer; }
+
+    @page { size: A4 portrait; margin: var(--page-margin); }
+    @media print { .controls { display: none !important; } }
+
+    #printRoot {
+      transform: scale(var(--scale));
+      transform-origin: top center;
+      margin: 0 auto;
+      display: block;
+      page-break-inside: avoid; break-inside: avoid;
+    }
+
+    .pdf-title { text-align: center; color: #222; font-weight: bold; font-size: var(--title-size); padding: 2px 0; margin: 0 0 4px 0; }
+    .ticket-number { font-size: var(--label-size); display: block; margin: 2px 0; }
+    #BigTable { padding:0; text-align:center; border:2px solid #000; border-collapse:separate; border-spacing: var(--table-spacing); margin-left:auto; margin-right:auto; }
+    .innerTable { table-layout: fixed; width:auto; margin: 0 auto; }
+    td { font-family: Arial, sans-serif; table-layout: fixed; color:#333; padding:2px; width:var(--cell-w); height:var(--cell-h); text-align:center; border:var(--cell-border) solid #9fa1df; font-size:var(--cell-font); background-color:#eee; }
+    #BigTable, #BigTable tr, #BigTable td, .innerTable { page-break-inside: avoid; break-inside: avoid; }
+  </style>
+</head>
+<body>
+  <div class="controls">
+    <strong>Print preview</strong>
+    <label>Scale <input id="scale" type="range" min="0.35" max="1.10" step="0.01" /></label>
+    <label>Title <input id="titleSize" type="range" min="10" max="22" step="1" /></label>
+    <label>Label <input id="labelSize" type="range" min="10" max="20" step="1" /></label>
+    <label>Cell font <input id="cellFont" type="range" min="10" max="20" step="1" /></label>
+    <label>Cell W <input id="cellW" type="range" min="20" max="40" step="1" /></label>
+    <label>Cell H <input id="cellH" type="range" min="16" max="36" step="1" /></label>
+    <label>Border <input id="cellBorder" type="range" min="1" max="4" step="1" /></label>
+    <label>Spacing <input id="spacing" type="range" min="0" max="8" step="1" /></label>
+    <label>Margins <input id="pageMargin" type="range" min="0" max="10" step="1" /></label>
+    <div class="spacer"></div>
+    <button class="btn" onclick="window.print()">Print</button>
+    <button class="btn" id="copySettings" title="Copy current settings to clipboard">Copy Settings</button>
+  </div>
+
+  <div id="printRoot">
+    <div class="pdf-title">[[${name}]]</div>
+    <table id="BigTable">
+      <tr th:each="ticket : ${tickets}">
+        <td>
+          <span class="ticket-number">Ticket #[[${ticket.id}]]</span>
+          <div>
+            <table class="innerTable" th:attr="data-ticket-id=${ticket.id}">
+              <tr th:each="row : ${ticket.numbers}">
+                <td th:each="cell : ${row}" th:classappend="${cell}!=0 ? number">
+                  <span th:text="${cell}" th:if="${cell}!=0"></span>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <script>
+    // Initialize control values from current CSS variables
+    const rs = getComputedStyle(document.documentElement);
+    const getNum = (name, def) => parseFloat((rs.getPropertyValue(name) || '').trim() || def);
+    const setVar = (name, val, unit='') => document.documentElement.style.setProperty(name, String(val)+unit);
+
+    const inputs = [
+      ['--scale', 'scale', getNum('--scale', 1.1), 0.01, ''],
+      ['--title-size', 'titleSize', getNum('--title-size', 14), 1, 'px'],
+      ['--label-size', 'labelSize', getNum('--label-size', 16), 1, 'px'],
+      ['--cell-font', 'cellFont', getNum('--cell-font', 20), 1, 'px'],
+      ['--cell-w', 'cellW', getNum('--cell-w', 28), 1, 'px'],
+      ['--cell-h', 'cellH', getNum('--cell-h', 22), 1, 'px'],
+      ['--cell-border', 'cellBorder', getNum('--cell-border', 3), 1, 'px'],
+      ['--table-spacing', 'spacing', getNum('--table-spacing', 5), 1, 'px'],
+    ];
+
+    // Load from localStorage if present
+    const LS_KEY = 'tickets-print-settings';
+    try {
+      const saved = JSON.parse(localStorage.getItem(LS_KEY) || 'null');
+      if (saved && typeof saved === 'object') {
+        if (typeof saved.pageMargin === 'number') setVar('--page-margin', saved.pageMargin, 'mm');
+        for (const [varName, id] of inputs) {
+          if (saved[varName] != null) setVar(varName, saved[varName], (varName==='--scale'?'':'px'));
+        }
+      }
+    } catch {}
+
+    // Page margin is special (mm)
+    const marginInput = document.getElementById('pageMargin');
+    const currentMargin = parseFloat((rs.getPropertyValue('--page-margin') || '').trim()) || 5;
+    marginInput.value = currentMargin;
+    marginInput.addEventListener('input', e => {
+      setVar('--page-margin', e.target.value, 'mm');
+      persist();
+    });
+
+    for (const [varName, id, initial, step, unit] of inputs) {
+      const el = document.getElementById(id);
+      // Re-read after potential localStorage application
+      const cur = getNum(varName, initial);
+      el.value = cur;
+      el.step = step;
+      el.addEventListener('input', e => { setVar(varName, e.target.value, unit); persist(); });
+    }
+
+    function persist() {
+      const data = { pageMargin: parseFloat(document.getElementById('pageMargin').value) };
+      for (const [varName, id] of inputs) {
+        const v = document.getElementById(id).value;
+        data[varName] = varName==='--scale' ? parseFloat(v) : parseInt(v, 10);
+      }
+      try { localStorage.setItem(LS_KEY, JSON.stringify(data)); } catch {}
+    }
+
+    document.getElementById('copySettings').addEventListener('click', () => {
+      const data = { pageMargin: parseFloat(document.getElementById('pageMargin').value) };
+      for (const [varName, id] of inputs) {
+        const v = document.getElementById(id).value;
+        data[varName] = varName==='--scale' ? parseFloat(v) : parseInt(v, 10);
+      }
+      const text = JSON.stringify(data, null, 2);
+      navigator.clipboard.writeText(text).then(() => alert('Settings copied to clipboard. Paste them here and I will bake them into code.')).catch(() => alert(text));
+    });
+  </script>
+</body>
+</html>

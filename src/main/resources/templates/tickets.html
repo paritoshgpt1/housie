@@ -9,6 +9,17 @@
     <script type="text/javascript" src="/assets/js/script.js"></script>
     <style>
         .tickets-header-link { font-size:14px; }
+        .tickets-actions { position: fixed; top: 12px; right: 12px; display: flex; gap: 8px; }
+        @media print {
+            @page { size: A4 portrait; margin: 10mm; }
+            html, body { height: auto; }
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .no-print { display: none !important; }
+            /* Scale content slightly so up to 6 tickets fit on one page */
+            #printRoot { transform: scale(0.85); transform-origin: top center; }
+            /* Avoid accidental page breaks inside tickets */
+            #BigTable, #BigTable tr, #BigTable td, .innerTable { page-break-inside: avoid; break-inside: avoid; }
+        }
     </style>
     
     
@@ -23,13 +34,97 @@
 <body>
 <h1 align="center">Get Ready, [[${name}]] !</h1>
 <div style="text-align:center; margin:8px 0 16px;">
-    <a class="tickets-header-link" href="/dividends" target="_blank" rel="noopener">Learn about dividends</a>
+    <a class="tickets-header-link no-print dividends-link" href="/dividends" target="_blank" rel="noopener">Learn about dividends</a>
 </div>
 
-<!-- Clear button to reset all crossed numbers on this page -->
-<button id="clearCrosses" style="position:fixed; top:12px; right:12px; padding:6px 10px; cursor:pointer;">Clear</button>
+<!-- Action buttons: Clear and Download PDF -->
+<div class="tickets-actions no-print">
+    <button id="clearCrosses" style="padding:6px 10px; cursor:pointer;">Clear</button>
+    <a th:href="@{'/generate-tickets.pdf'(code=${code})}"
+       style="padding:6px 10px; cursor:pointer; display:inline-block; text-decoration:none; border:1px solid #333; background:#f5f5f5; color:#000;">Download PDF</a>
+    <a th:href="@{'/generate-tickets.png'(code=${code})}"
+       style="padding:6px 10px; cursor:pointer; display:inline-block; text-decoration:none; border:1px solid #333; background:#f5f5f5; color:#000;">Download PNG</a>
+    <a th:href="@{'/tickets-print'(code=${code})}"
+       style="padding:6px 10px; cursor:pointer; display:inline-block; text-decoration:none; border:1px solid #333; background:#dff5ff; color:#000;">Open Print View</a>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</div>
 
-<div>
+<div id="printRoot">
     <table id="BigTable">
         <tr th:each="ticket : ${tickets}">
             <td>
@@ -51,4 +146,3 @@
     </div>
 </body>
 </html>
-
