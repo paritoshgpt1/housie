@@ -1,0 +1,12 @@
+{
+  "allowed": [
+    "Hindi Female",
+    "Hindi Male",
+    "US English Female",
+    "US English Male",
+    "UK English Female",
+    "UK English Male",
+    "English Female",
+    "English Male"
+  ]
+}

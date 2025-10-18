@@ -233,6 +233,19 @@ custom.host=your-domain.com
 - **Validation System**: Built-in claim validation
 - **Visual Dividends**: Image representations of winning patterns
 
+## 🎨 Themes & Voices
+
+- **Theme JSONs**: Each theme defines a sentence for numbers 1–90 in a JSON map stored at `src/main/resources/static/assets/themes/`.
+  - File format: `{ "1": "...", "2": "...", ..., "90": "..." }`
+  - Default theme: `Default.json` (derived from the original hardcoded list).
+  - Fallback: If a theme or specific number is missing, the app falls back to `Default.json`.
+- **Selecting Theme**: On the game board (`/game-board`), use the Theme dropdown. Selection persists across reloads.
+  - To add a new theme, create `<ThemeName>.json` in `assets/themes/` and add an `<option value="<ThemeName>">` to the `#themeSelect` dropdown in `templates/gameboard.html`.
+- **Voice Selection**: A Voice dropdown on the game board lists only voices allowed by `assets/voices/allowed.json`. The chosen voice is used for announcements and persists across reloads.
+  - Configure whitelist: edit `src/main/resources/static/assets/voices/allowed.json`
+    - Format: `{ "allowed": ["Hindi Female", "UK English Female"] }`
+    - If the configured voices aren’t available on the client, the app falls back silently and won’t speak until an allowed voice is available.
+
 ## 🤝 Contributing
 
 1. Fork the repository
