@@ -10,16 +10,22 @@
 </head>
 <body>
 <h1 align="center">Get Ready, [[${name}]] !</h1>
+
+<!-- Clear button to reset all crossed numbers on this page -->
+<button id="clearCrosses" style="position:fixed; top:12px; right:12px; padding:6px 10px; cursor:pointer;">Clear</button>
+
 <div>
     <table id="BigTable">
         <tr th:each="ticket : ${tickets}">
             <td>
                 <span class="ticket-number">Ticket #[[${ticket.id}]]</span>
                 <div>
-                    <table class="innerTable">
+                    <!-- Attach ticket id so JS can associate crossed numbers per ticket -->
+                    <table class="innerTable" th:attr="data-ticket-id=${ticket.id}">
                         <tr th:each="row : ${ticket.numbers}">
+                            <!-- Add a semantic class and keep click-target on td.number; store the cell value as data-number on span -->
                             <td th:each="cell : ${row}" th:classappend="${cell}!=0 ? number">
-                                <span th:text="${cell}" class="diag1" th:if="${cell}!=0"></span>
+                                <span th:text="${cell}" class="diag1 ticket-cell" th:if="${cell}!=0" th:attr="data-number=${cell}"></span>
                             </td>
                         </tr>
                     </table>
@@ -27,6 +33,6 @@
             </td>
         </tr>
     </table>
-</div>
+    </div>
 </body>
 </html>
