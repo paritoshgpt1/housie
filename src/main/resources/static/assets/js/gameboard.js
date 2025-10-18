@@ -1,11 +1,19 @@
 $(function () {
+    const THEME_KEY = 'housie_theme';
+    const VOICE_KEY = 'housie_voice';
+    const ALLOWED_VOICES_URL = '/assets/voices/allowed.json';
+
     let bingo = {
         timeInterval: 7, // in seconds
         selectedNumbers: [],
         timer: null,
         isTimerOn: false,
         lastFive: [],
-        bingoNumberWords: ["Top of the house number 1", "Kaala dhan", "Goodness Me", "Knock at the door", "Symbol of congress", "Super sixer", "Colours of rainbow", "Big fat lady number 8", "Number of planets in solar system number 9", "A big fat hen", "Amitabh's legs", "One dozen", "Unlucky for some lucky for me no. thirteen", "Valentine Day", "Yet to be kissed", "Sweet sixteen", "Dancing Queen", "Voting age", "End of the teens", "Blind 20", "President salute", "Two little ducks", "You and me", "Two dozen", "Silver Jublee Number", "Republic Day", "Gateway to heaven", "Duck and its mate", "In your prime", "Its middle Age", "Time for fun", "Mouth Full", "All the 3s", "Dil mange more", "Flirty Husband", "Popular Number", "Mixed luck", "Oversize", "Watch your waistline", "Naughty 40", "Life's begun at 41", "Quit India Movement", "Pain in the knee", "All the fours", "Halfway there", "Up to tricks", "Year of Independence", "Four dozen", "Rise and shine", "Half a century, Golden Jublee", "Charity begins at 51", "Pack of cards", "Pack with a joker", "Pack with two jokers", "All the fives", "Pick up sticks", "Mutiny Year", "Time to retire", "Just retired", "Five dozen", "Bakers bun", "Click the two", "Click the three", "Catch the chor", "Old age pension", "Chakke pe chakka", "Made in heaven", "Saving grace", "Ulta Pulta", "Lucky blind", "Lucky bachelor", "Lucky couple", "A crutch and a flea", "Lucky chor", "Diamond Jublee", "Lucky six", "Two hockey sticks", "Heaven's gate", "lucky nine", "Gandhi's breakfast", "Corner shot", "Last of the two", "India wins Cricket World Cup", "Last of the chors", "Grandma", "Last six", "Grandpa", "Two fat ladies", "All but one", "Top of the house"],
+        sentences: {}, // active theme sentences map
+        defaultSentences: {}, // Default theme fallback
+        currentTheme: 'Default',
+        currentVoice: 'Hindi Female',
+        allowedVoiceNames: [], // enforced whitelist from allowed.json
         roundNumber: $("#roundNumber").text(),
         generateRandom: function () {
             const min = 1;
@@ -34,17 +42,10 @@ $(function () {
             bingo.addToLastFive(random);
             return random;
         },
-        say: function (m) {
-            let msg = new SpeechSynthesisUtterance();
-            let voices = window.speechSynthesis.getVoices();
-            msg.voice = voices[39];
-            msg.voiceURI = "Veena";
-            msg.volume = 1;
-            msg.rate = 0.8;
-            msg.pitch = 0.8;
-            msg.text = m;
-            msg.lang = 'en-IN';
-            speechSynthesis.speak(msg);
+        getSentence: function (numStr) {
+            if (bingo.sentences && bingo.sentences[numStr]) return bingo.sentences[numStr];
+            if (bingo.defaultSentences && bingo.defaultSentences[numStr]) return bingo.defaultSentences[numStr];
+            return '';
         },
         setTimerOn: function () {
             $('#start').prop('disabled', true);
@@ -59,19 +60,166 @@ $(function () {
             console.log("timer off");
         }
     };
-    $('td').each(function () {
-        let concatClass = this.cellIndex + "" + this.parentNode.rowIndex;
-        let numberString = (parseInt(concatClass, 10) + 1).toString();
-        $(this).addClass("cell" + numberString).text(numberString);
+
+    function loadAllowedVoices() {
+        return $.getJSON(ALLOWED_VOICES_URL)
+            .then(function (data) {
+                const arr = (data && Array.isArray(data.allowed)) ? data.allowed : [];
+                // Fallback to at least Hindi Female if none configured
+                bingo.allowedVoiceNames = arr.length ? arr : ['Hindi Female'];
+            })
+            .catch(function () {
+                bingo.allowedVoiceNames = ['Hindi Female'];
+            });
+    }
+
+    function populateBoardNumbers() {
+        $('td').each(function () {
+            let concatClass = this.cellIndex + "" + this.parentNode.rowIndex;
+            let numberString = (parseInt(concatClass, 10) + 1).toString();
+            $(this).addClass("cell" + numberString).text(numberString);
+        });
+    }
+
+    function persistSelections() {
+        try {
+            localStorage.setItem(THEME_KEY, bingo.currentTheme);
+            localStorage.setItem(VOICE_KEY, bingo.currentVoice);
+        } catch (e) {
+            // ignore storage errors
+        }
+    }
+
+    function restoreSelections() {
+        try {
+            const savedTheme = localStorage.getItem(THEME_KEY);
+            const savedVoice = localStorage.getItem(VOICE_KEY);
+            if (savedTheme) bingo.currentTheme = savedTheme;
+            if (savedVoice) bingo.currentVoice = savedVoice;
+        } catch (e) {
+            // ignore
+        }
+        $('#themeSelect').val(bingo.currentTheme);
+        $('#voiceSelect').val(bingo.currentVoice);
+    }
+
+    function loadDefaultTheme() {
+        return $.getJSON('/assets/themes/Default.json')
+            .then(function (data) {
+                bingo.defaultSentences = data || {};
+            })
+            .catch(function () {
+                bingo.defaultSentences = {};
+            });
+    }
+
+    function loadTheme(themeName) {
+        bingo.currentTheme = themeName || 'Default';
+        if (bingo.currentTheme === 'Default') {
+            bingo.sentences = bingo.defaultSentences;
+            persistSelections();
+            return $.Deferred().resolve().promise();
+        }
+        return $.getJSON('/assets/themes/' + encodeURIComponent(bingo.currentTheme) + '.json')
+            .then(function (data) {
+                bingo.sentences = data || {};
+                persistSelections();
+            })
+            .catch(function () {
+                bingo.sentences = bingo.defaultSentences;
+                bingo.currentTheme = 'Default';
+                $('#themeSelect').val('Default');
+                persistSelections();
+            });
+    }
+
+    function populateVoicesWithResponsiveVoice() {
+        if (typeof responsiveVoice === 'undefined' || !responsiveVoice || !responsiveVoice.voiceSupport()) {
+            return false;
+        }
+        const voices = responsiveVoice.getVoices ? responsiveVoice.getVoices() : [];
+        if (!voices || !voices.length) return false;
+        // Filter voices against whitelist
+        const voiceMap = new Map(voices.map(v => [v.name, v]));
+        const filtered = bingo.allowedVoiceNames
+            .map(name => voiceMap.get(name))
+            .filter(Boolean);
+
+        const $voice = $('#voiceSelect');
+        $voice.empty();
+        filtered.forEach(function (v) {
+            $('<option>').val(v.name).text(v.name).appendTo($voice);
+        });
+
+        // Enforce allowed persisted voice; fallback to first allowed
+        if ($voice.find('option[value="' + bingo.currentVoice + '"]').length) {
+            $voice.val(bingo.currentVoice);
+        } else {
+            const firstAllowed = filtered.length ? filtered[0].name : null;
+            if (firstAllowed) {
+                bingo.currentVoice = firstAllowed;
+                $voice.val(firstAllowed);
+            } else {
+                // No allowed voices available on this client; keep dropdown empty
+                bingo.currentVoice = '';
+            }
+        }
+        persistSelections();
+        return true;
+    }
+
+    function initVoiceDropdown() {
+        if (populateVoicesWithResponsiveVoice()) return;
+        let attempts = 0;
+        const maxAttempts = 10;
+        const iv = setInterval(function () {
+            attempts++;
+            if (populateVoicesWithResponsiveVoice() || attempts >= maxAttempts) {
+                clearInterval(iv);
+            }
+        }, 500);
+    }
+
+    // Initialize board and selections
+    populateBoardNumbers();
+    restoreSelections();
+    // Load allowed voices config, then populate voices
+    $.when(loadAllowedVoices()).always(function () {
+        initVoiceDropdown();
     });
+
+    // Load Default then selected theme with fallback
+    $.when(loadDefaultTheme()).then(function () {
+        loadTheme(bingo.currentTheme);
+    });
+
+    // Handlers for theme and voice selections
+    $('#themeSelect').on('change', function () {
+        const theme = $(this).val();
+        loadTheme(theme);
+    });
+    $('#voiceSelect').on('change', function () {
+        bingo.currentVoice = $(this).val();
+        persistSelections();
+    });
+
     $('#btnGenerate').click(function () {
         let random = bingo.generateNextRandom().toString();
         $('#number').text(random);
         $('td.cell' + random).addClass('selected');
-        let numberLine = bingo.bingoNumberWords[parseInt(random) - 1];
+        let numberLine = bingo.getSentence(random);
         $('#numberLine').text(numberLine);
-        // bingo.say(numberLine + " is " + random);
-        responsiveVoice.speak(numberLine + " is " + random, "Hindi Female");
+        if (typeof responsiveVoice !== 'undefined' && responsiveVoice) {
+            // Speak only if current voice is allowed and present
+            const canSpeak = bingo.currentVoice && (
+                !bingo.allowedVoiceNames.length || bingo.allowedVoiceNames.indexOf(bingo.currentVoice) !== -1
+            );
+            if (canSpeak) {
+                responsiveVoice.speak(numberLine + " is " + random, bingo.currentVoice);
+            } else {
+                console.warn('No allowed voice available to speak.');
+            }
+        }
         markNumberOnBoard(random, bingo.roundNumber);
         $("#claimNumber").val(random);
     });
