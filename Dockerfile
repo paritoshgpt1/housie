@@ -13,4 +13,5 @@ COPY --from=build /workspace/target/Housie-0.0.1-SNAPSHOT.war /app/app.war
 COPY --from=build /workspace/target/dependency/webapp-runner.jar /app/webapp-runner.jar
 # server.port is configured to use ${PORT:8080} in application.properties
 EXPOSE 8080
-CMD ["java", "-jar", "/app/webapp-runner.jar", "--port", "${PORT}", "/app/app.war"]
+# Use shell form so $PORT expands at runtime
+CMD ["sh", "-c", "java -jar /app/webapp-runner.jar --port ${PORT:-8080} /app/app.war"]
