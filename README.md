@@ -64,15 +64,12 @@ Housie is a popular number-based game where players mark numbers on their ticket
    # Ensure you have a Postgres user/password to connect locally
    ```
 
-3) Run options
+3) Run with local Postgres (application-local.properties)
    ```bash
-   # Default: H2 in-memory DB (no setup required)
+   # Option A: via Makefile (recommended)
    make run-local
 
-   # Postgres: use your local DB via profile "local"
-   # Edit src/main/resources/application-local.properties with your creds
-   make run-local-pg
-   # or
+   # Option B: via Maven directly
    mvn -DskipTests spring-boot:run -Dspring-boot.run.profiles=local
    ```
 
@@ -96,8 +93,7 @@ make docker-run DB_USER=<your_user> DB_PASS=<your_password>
 Open `http://localhost:8080/welcome`.
 
 Notes
-- The default local profile `local-h2` uses `application-local-h2.properties` and starts without external DB.
-- The Postgres profile `local` reads `application-local.properties`. Update it (or set LOCAL_DB_* env vars) to match your local DB.
+- The `local` profile reads `application-local.properties`. Update it (or set LOCAL_DB_* env vars) to match your local DB.
 
 ## ☁️ Deploy: Neon + Render
 
