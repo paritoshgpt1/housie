@@ -18,7 +18,8 @@
             <h5 class="card-title">[[${dividend.name}]]</h5>
             <p class="card-text">[[${dividend.description}]]</p>
         </div>
-        <img th:src="@{'../assets/img/dividends/' + ${dividend.code} + '.png'}" class="card-img-bottom" th:attr="alt=${dividend.name}">
+        <img th:src="@{/assets/img/dividends/{img}(img=${dividend.image})}"
+             class="card-img-bottom" th:attr="alt=${dividend.name}">
     </div>
 </div>
 

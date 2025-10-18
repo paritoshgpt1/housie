@@ -1,0 +1,27 @@
+[
+  {
+    "name": "4 Corners",
+    "code": "four_corners",
+    "description": "The four corner numbers of your ticket are called.",
+    "image": "4corners.png"
+  },
+  { "name": "Bamboo", "code": "bamboo", "description": "All three numbers in the center column are called.", "image": "bamboo.png" },
+  { "name": "Bottom Line", "code": "bottom_line", "description": "All numbers in the bottom row are called.", "image": "bottomline.png" },
+  { "name": "Breakfast", "code": "breakfast", "description": "All non-empty cells in the first three columns are called.", "image": "breakfast.png" },
+  { "name": "Dinner", "code": "dinner", "description": "All non-empty cells in the last three columns are called.", "image": "dinner.png" },
+  { "name": "Early 7", "code": "early_7", "description": "Any seven numbers on your ticket are called.", "image": "early7.png" },
+  { "name": "Full House", "code": "full_house", "description": "All 15 numbers on your ticket are called.", "image": "fullhouse.png" },
+  { "name": "H", "code": "h", "description": "Left column, middle row, and right column are called.", "image": "h.png" },
+  { "name": "L", "code": "l", "description": "Left column and the entire bottom row are called.", "image": "l.png" },
+  { "name": "Lunch", "code": "lunch", "description": "All non-empty cells in the middle three columns are called.", "image": "lunch.png" },
+  { "name": "Middle Line", "code": "middle_line", "description": "All numbers in the middle row are called.", "image": "middleline.png" },
+  { "name": "Older", "code": "older", "description": "All numbers greater than 45 on your ticket are called.", "image": "older.png" },
+  { "name": "Pyramid", "code": "pyramid", "description": "Top center, middle-left, middle-right, and all three bottom cells are called.", "image": "pyramid.png" },
+  { "name": "Raindrop", "code": "raindrop", "description": "At least one number is called in every column, including the current number.", "image": "raindrop.png" },
+  { "name": "T", "code": "t", "description": "Entire top row and the center column are called.", "image": "t.png" },
+  { "name": "Temperature", "code": "temp", "description": "Both the smallest and largest numbers on your ticket are called.", "image": "temp.png" },
+  { "name": "Top Line", "code": "top_line", "description": "All numbers in the top row are called.", "image": "topline.png" },
+  { "name": "Younger", "code": "younger", "description": "All numbers 45 or below on your ticket are called.", "image": "younger.png" },
+  { "name": "Zona", "code": "zona", "description": "None of your ticket’s numbers have been called when you claim.", "image": "zona.png" }
+]
+
