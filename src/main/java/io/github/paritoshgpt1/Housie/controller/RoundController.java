@@ -57,15 +57,16 @@ public class RoundController {
 		return response;
 	}
 
-	@PostMapping("/claims")
-	public void saveClaim(ClaimDto claimDto) {
+    @PostMapping("/claims")
+    public void saveClaim(ClaimDto claimDto) {
 
-		Claim claim = Claim.builder()
-				.name(claimDto.getName())
-				.ticket(ticketWrapper.getTicket(claimDto.getTicketId()))
-				.build();
-		claimRepository.save(claim);
+        Claim claim = Claim.builder()
+                .name(claimDto.getName())
+                .ticket(ticketWrapper.getTicket(claimDto.getTicketId()))
+                .round(roundRepository.findRoundById(claimDto.getRoundId()))
+                .build();
+        claimRepository.save(claim);
 
-	}
+    }
 
 }

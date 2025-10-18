@@ -33,6 +33,10 @@ public class Claim {
     @JoinColumn(name = "ticket_id", nullable = false)
     private Ticket ticket;
 
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)
+    @JoinColumn(name = "round_id", nullable = true)
+    private Round round;
+
     private String name;
 
     private Double factor;

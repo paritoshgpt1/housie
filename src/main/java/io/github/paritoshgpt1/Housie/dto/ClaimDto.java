@@ -6,4 +6,5 @@ import lombok.Data;
 public class ClaimDto {
     String name;
     Integer ticketId;
+    Integer roundId;
 }

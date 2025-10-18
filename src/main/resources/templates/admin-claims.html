@@ -21,7 +21,8 @@
                             <thead class="thead-light">
                             <tr>
                                 <th style="width:10%">ID</th>
-                                <th style="width:15%">Ticket #</th>
+                                <th style="width:12%">Ticket #</th>
+                                <th style="width:12%">Round #</th>
                                 <th style="width:35%">Name</th>
                                 <th style="width:15%">Factor</th>
                                 <th style="width:25%">Created</th>
@@ -31,11 +32,12 @@
                             <tr th:each="c : ${items}">
                                 <td th:text="${c.id}"></td>
                                 <td th:text="${c.ticket != null ? c.ticket.id : ''}"></td>
+                                <td th:text="${c.round != null ? c.round.id : ''}"></td>
                                 <td th:text="${c.name}"></td>
                                 <td th:text="${c.factor}"></td>
                                 <td th:text="${#dates.format(c.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
                             </tr>
-                            <tr th:if="${#lists.isEmpty(items)}"><td colspan="5" class="text-center p-4">No claims</td></tr>
+                            <tr th:if="${#lists.isEmpty(items)}"><td colspan="6" class="text-center p-4">No claims</td></tr>
                             </tbody>
                         </table>
                     </div>

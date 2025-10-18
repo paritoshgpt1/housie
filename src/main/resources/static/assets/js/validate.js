@@ -328,11 +328,14 @@ class Validate {
     }
 
     correctlyClaimed() {
+        const roundIdText = document.getElementById('roundNumber') ? document.getElementById('roundNumber').textContent : null;
+        const roundId = roundIdText ? parseInt(roundIdText, 10) : null;
         $.post(
             "/claims",
             {
                 name: this.claim,
-                ticketId: this.ticketNumber
+                ticketId: this.ticketNumber,
+                roundId: roundId
             },
             function() {
                 console.log("Claim successfully saved");
