@@ -11,10 +11,12 @@ DB_HOST ?= localhost
 DB_NAME ?= housie
 DB_SSLMODE ?= disable
 
+
 .PHONY: help
 help:
 	@echo "Available targets:"
-	@echo "  run-local        - Run via Maven against LOCAL Postgres"
+	@echo "  run-local        - Run via Maven against local H2 (default)"
+	@echo "  run-local-pg     - Run via Maven against LOCAL Postgres"
 	@echo "  run-neon         - Run via Maven using .env (Neon)"
 	@echo "  build            - Build WAR (skip tests)"
 	@echo "  docker-build     - Build local Docker image housie:local"
@@ -26,8 +28,13 @@ help:
 
 .PHONY: run-local
 run-local:
-	@echo "Running with Spring profile: local (uses src/main/resources/application-local.properties)"
-	 mvn -DskipTests spring-boot:run -Dspring-boot.run.profiles=local
+	@echo "Running with Spring profile: local-h2 (uses application-local-h2.properties)"
+	mvn -DskipTests spring-boot:run -Dspring-boot.run.profiles=local-h2
+
+.PHONY: run-local-pg
+run-local-pg:
+	@echo "Running with Spring profile: local (uses application-local.properties for Postgres)"
+	mvn -DskipTests spring-boot:run -Dspring-boot.run.profiles=local
 
 .PHONY: run-neon
 run-neon:
