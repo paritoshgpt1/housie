@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Ticket Generator</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta charset=utf-8/>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="/assets/css/style.css"/>
+    <script type="text/javascript" src="/assets/js/script.js"></script>
+</head>
+<body>
+<h1 align="center">Welcome Organizer. Lets Play Housie !</h1>
+<form action="#" th:action="@{/organizer}" th:object="${organizer}"  method="post">
+    <label>
+        Enter your Organizer Code
+        <input type="text" name="code" th:field="*{code}">
+    </label>
+    <input type="submit" value="Submit">
+</form>
+
+</body>
+</html>

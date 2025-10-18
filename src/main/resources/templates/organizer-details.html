@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Ticket Generator</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta charset=utf-8/>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="/assets/css/style.css"/>
+    <script type="text/javascript" src="/assets/js/script.js"></script>
+</head>
+<body>
+<h1 align="center">Welcome [[${organizer.name}]]. Lets get you started !</h1>
+
+<p>
+You can generate secret code for the players here
+</p>
+
+<form action="#" th:action="@{/player-details}" th:object="${playerForm}"  method="post">
+    <label>
+        Generate code for how many players?
+        <input type="number" th:field="*{count}">
+        <input type="hidden" th:value="${organizer.code}" name="organizerCode">
+    </label>
+    <input type="submit" value="Submit">
+</form>
+
+
+</body>
+</html>

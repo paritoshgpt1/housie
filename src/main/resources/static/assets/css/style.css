@@ -20,7 +20,9 @@ td{
     font-size: 23px;
     background-color: #eee;
 }
-
+.ticket-number {
+    font-size: 20px;
+}
 #BigTable{
     padding:0px;
     width:50px;
@@ -30,6 +32,8 @@ td{
     border-collapse: separate;
     border-spacing: 15px;
     margin-left: 34%;
+    margin-left:auto;
+    margin-right:auto;
 }
 
 
@@ -42,7 +46,7 @@ h1, h4 a{
     border:2px solid #DDDDCC;
 }
 
-td{
+.BigTable td{
     cursor:pointer;
 }
 
@@ -69,4 +73,12 @@ td{
     background:
             linear-gradient(to top left, transparent 45%, rgba(255,0,0,0.35) 46%, rgba(255,0,0,0.35) 54%, transparent 55%);
             linear-gradient(to top right, transparent 45%, rgba(255,0,0,0.35) 46%, rgba(255,0,0,0.35) 54%, transparent 55%);
+}
+
+.player-tickets {
+    width: 100%;
+}
+
+.player-tickets td {
+    font-size: 19px;
 }

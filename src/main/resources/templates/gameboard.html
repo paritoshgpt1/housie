@@ -1,0 +1,207 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>Housie Generator</title>
+    <meta name="description" content="Housie Generator">
+    <meta name="author" content="Paritosh">
+
+    <link rel="stylesheet" href="/assets/css/gameboard.css">
+
+</head>
+
+<body>
+<script src="https://code.responsivevoice.org/responsivevoice.js?key=5mJjjbqd"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="/assets/js/gameboard.js"></script>
+<script type="text/javascript" src="/assets/js/validate.js"></script>
+<div class="container">
+    <div>
+        <span>
+            Housie Number Generator! Round #<span id="roundNumber">[[${round.id}]]</span>
+        </span>
+    </div>
+    <div class="leftTop">
+        <label for="speed">Speed: </label>
+        <input name="speed" id="speed" type="number" value="7"/>
+        <input type="button" id="updateSpeed" value="Update">
+    </div>
+    <div class="bigNumberDisplay">
+        <div id="number">0</div>
+        <div id="numberLine"></div>
+    </div>
+    <div class="validation">
+        <h4>Validate A Claim</h4>
+        <label>
+            Ticket #
+            <input type="text" name="claimTicketNumber" id="claimTicketNumber">
+        </label>
+        <br/>
+        <br/>
+        <label>
+            Claim Number
+            <input type="text" name="claimNumber" id="claimNumber">
+        </label>
+        <br/>
+        <br/>
+        <label for="claim">Choose a claim:</label>
+        <select id="claim">
+            <option value="early7">Early 7</option>
+            <option value="4corners">4 Corners</option>
+            <option value="bamboo">Bamboo</option>
+            <option value="l">L</option>
+            <option value="t">T</option>
+            <option value="h">H</option>
+            <option value="breakfast">Breakfast</option>
+            <option value="lunch">Lunch</option>
+            <option value="dinner">Dinner</option>
+            <option value="topline">Top Line</option>
+            <option value="middleline">Middle Line</option>
+            <option value="bottomline">Bottom Line</option>
+            <option value="zona">Zona</option>
+            <option value="temp">Temperature</option>
+            <option value="pyramid">Pyramid</option>
+            <option value="raindrop">Raindrop</option>
+            <option value="younger">Younger</option>
+            <option value="older">Older</option>
+            <option value="fullhouse">Full House</option>
+        </select>
+        <br>
+        <br>
+        <input type="button" value="Validate" id="validate">
+    </div>
+
+    <div>
+        <input id="start" type="button" value="Start"/>
+        <input id="pause" type="button" disabled value="Pause"/>
+        <input id="btnGenerate" type="button" hidden="true" value="Generate"/>
+    </div>
+
+    <br/>
+
+    <div class="numbersTable">
+        <table>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+    <br/>
+
+    <div>
+        <h2>Last 5 numbers: <span id="lastFive"></span></h2>
+    </div>
+
+</div>
+</body>
+</html>

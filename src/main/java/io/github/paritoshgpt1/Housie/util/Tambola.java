@@ -1,39 +1,29 @@
-package housie;
+package io.github.paritoshgpt1.Housie.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+
+import static io.github.paritoshgpt1.Housie.util.TambolaTicket.NUMBER_OF_COLUMNS;
+import static io.github.paritoshgpt1.Housie.util.TambolaTicket.TICKETS_IN_A_SHEET;
 
 /**
  * @author Paritosh
  */
 public class Tambola {
 
-    private static final int TICKETS_IN_A_SHEET = 6;
-    private static final int NUMBER_OF_COLUMNS = 9;
-    private static final int NUMBER_OF_ROWS = 3;
-
-    public static class Ticket {
-        public int[][] numbers;
-
-        Ticket() {
-            this.numbers = new int[NUMBER_OF_ROWS][NUMBER_OF_COLUMNS];
-        }
-
-        int getRowCount(int r) {
-            int count = 0;
-            for (int i = 0; i < NUMBER_OF_COLUMNS; i++) {
-                if (numbers[r][i] != 0) count++;
-            }
-            return count;
-        }
-
-        @Override
-        public String toString() {
-            return Arrays.deepToString(this.numbers).replace("],", "],\n") + "\n\n";
-        }
-    }
-
     public static void main(String[] args) {
-        System.out.println(Arrays.toString(getTickets(6)));
+        System.out.println("Final Tickets Generated:\n\n" + Arrays.toString(generateTickets(6))
+                .replace("[[", "[")
+                .replace("]]", "]")
+                .replace("], [", "],\n[")
+                .replace(", [", "[")
+                .replace(" ", "\t")
+        );
     }
 
     static int getRand(int min, int max) {
@@ -47,21 +37,21 @@ public class Tambola {
         return count;
     }
 
-    public static Ticket[] getTickets(int n) {
-        Ticket[] res = new Ticket[n];
-        Ticket[] generatedTickets = generateTickets();
-        System.arraycopy(generatedTickets, 0, res, 0, n);
+    public static TambolaTicket[] generateTickets(int n) {
+        TambolaTicket[] res = new TambolaTicket[n];
+        TambolaTicket[] generatedTambolaTickets = generateTickets();
+        System.arraycopy(generatedTambolaTickets, 0, res, 0, n);
         return res;
     }
 
-    private static Ticket[] generateTickets() {
+    private static TambolaTicket[] generateTickets() {
 
         List<List<Integer>> columns = getTicketColumns();
         List<List<List<Integer>>> sets = initializeColumnForEachTicket();
 
-        Ticket[] tickets = new Ticket[TICKETS_IN_A_SHEET];
+        TambolaTicket[] tambolaTickets = new TambolaTicket[TICKETS_IN_A_SHEET];
         for (int i = 0; i < TICKETS_IN_A_SHEET; i++) {
-            tickets[i] = new Ticket();
+            tambolaTickets[i] = new TambolaTicket();
         }
 
         // assign 1 element in each column in each ticket
@@ -129,7 +119,7 @@ public class Tambola {
         System.out.println(columns);
         System.out.println("Step 4");
         //one more pass over the remaining columns
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < NUMBER_OF_COLUMNS; i++) {
             List<Integer> col = columns.get(i);
             if (col.size() == 0) continue;
 
@@ -162,33 +152,49 @@ public class Tambola {
         printSets(sets);
 
         System.out.println("Step 6");
-        //got the sets - need to arrange in tickets now
+        //got the sets - need to arrange in tambolaTickets now
         for (int setIndex = 0; setIndex < TICKETS_IN_A_SHEET; setIndex++) {
-            List<List<Integer>> currSet = sets.get(setIndex);
-            Ticket currTicket = tickets[setIndex];
-            fillTicket(currTicket, currSet);
+            List<List<Integer>> currSet = clone(sets.get(setIndex));
+            TambolaTicket currTambolaTicket = tambolaTickets[setIndex];
+            fillTicket(currTambolaTicket, currSet);
+            while (!currTambolaTicket.isValid()) {
+                System.out.println("#### Invalid Ticket ####");
+                System.out.println(currTambolaTicket);
+                currSet = clone(sets.get(setIndex));
+                tambolaTickets[setIndex] = new TambolaTicket();
+                currTambolaTicket = tambolaTickets[setIndex];
+                fillTicket(currTambolaTicket, currSet);
+            }
         }
 
-        return tickets;
+        return tambolaTickets;
+    }
+
+    private static List<List<Integer>> clone(List<List<Integer>> toCopy) {
+        List<List<Integer>> copy = new ArrayList<>();
+        for (List<Integer> each: toCopy) {
+            copy.add(new ArrayList<>(each));
+        }
+        return copy;
     }
 
 
-    private static void fillTicket(Ticket currTicket, List<List<Integer>> currSet) {
+    private static void fillTicket(TambolaTicket currTambolaTicket, List<List<Integer>> currSet) {
 
-        System.out.println("Ticket numbers going to be filled");
+        System.out.println("TambolaTicket numbers going to be filled");
         System.out.println(currSet);
 
         // Fill columns with 3 numbers
         for (int colIndex = 0; colIndex < NUMBER_OF_COLUMNS; colIndex++) {
             List<Integer> currSetCol = currSet.get(colIndex);
             if (currSetCol.size() == 3) {
-                currTicket.numbers[0][colIndex] = currSetCol.remove(0);
-                currTicket.numbers[1][colIndex] = currSetCol.remove(0);
-                currTicket.numbers[2][colIndex] = currSetCol.remove(0);
+                currTambolaTicket.numbers[0][colIndex] = currSetCol.remove(0);
+                currTambolaTicket.numbers[1][colIndex] = currSetCol.remove(0);
+                currTambolaTicket.numbers[2][colIndex] = currSetCol.remove(0);
             }
         }
-        System.out.println("After fiiling columns with 3 numbers");
-        System.out.println(currTicket);
+        System.out.println("After filling columns with 3 numbers");
+        System.out.println(currTambolaTicket);
 
         // Fill columns with 2 numbers
         for (int colIndex = 0; colIndex < NUMBER_OF_COLUMNS; colIndex++) {
@@ -196,57 +202,53 @@ public class Tambola {
             if (currSetCol.size() != 2) continue;
             while (!currSetCol.isEmpty()) {
                 // If first row already has 5 numbers, put the 2 numbers in 2nd and 3rd row
-                if (currTicket.getRowCount(0) == 5) {
-                    currTicket.numbers[1][colIndex] = currSetCol.remove(0);
-                    currTicket.numbers[2][colIndex] = currSetCol.remove(0);
+                if (currTambolaTicket.getRowCount(0) == 5) {
+                    System.out.println("5 numbers in 1st row");
+                    currTambolaTicket.numbers[1][colIndex] = currSetCol.remove(0);
+                    currTambolaTicket.numbers[2][colIndex] = currSetCol.remove(0);
+                } else if (currTambolaTicket.getRowCount(1) == 5) {
+                    System.out.println("5 numbers in 2nd row");
+                    // If second row already has 5 numbers, put the 2 numbers in 1st and 3rd row
+                    currTambolaTicket.numbers[0][colIndex] = currSetCol.remove(0);
+                    currTambolaTicket.numbers[2][colIndex] = currSetCol.remove(0);
+                } else if (currTambolaTicket.getRowCount(2) == 5) {
+                    System.out.println("5 numbers in 3rd row");
+                    // If third row already has 5 numbers, put the 2 numbers in 1st and 2nd row
+                    currTambolaTicket.numbers[0][colIndex] = currSetCol.remove(0);
+                    currTambolaTicket.numbers[1][colIndex] = currSetCol.remove(0);
                 } else {
                     // if first row still has space, select the row randomly for 1st number
                     // 2nd row will have space for sure, because if 1st has space
                     int randIndex = getRand(0, 1);
-                    currTicket.numbers[randIndex][colIndex] = currSetCol.remove(0);
+                    currTambolaTicket.numbers[randIndex][colIndex] = currSetCol.remove(0);
 
                     // if 1st number is in second row, put 2nd number in 3rd row
                     if (randIndex == 1) {
-                        currTicket.numbers[2][colIndex] = currSetCol.remove(0);
+                        currTambolaTicket.numbers[2][colIndex] = currSetCol.remove(0);
                     } else {
                         // if 2nd and 3rd row both have less than 5 numbers, select a row randomly for 2nd number
-                        if (currTicket.getRowCount(1) < 5 && currTicket.getRowCount(2) < 5) {
-                            int randIndex2 = getRand(1, 2);
-                            currTicket.numbers[randIndex2][colIndex] = currSetCol.remove(0);
-                        } else if (currTicket.getRowCount(1) == 5) {
-                            // if 2nd row already has 5 numbers, put 2nd number in 3rd row
-                            currTicket.numbers[2][colIndex] = currSetCol.remove(0);
-                        } else if (currTicket.getRowCount(2) == 5) {
-                            // if 3rd row already has 5 numbers, put 2nd number in 2nd row
-                            currTicket.numbers[1][colIndex] = currSetCol.remove(0);
-                        } else {
-                            // This will never happen
-                            System.out.println("ERROR !!!!!!!!!!!!: " + currSetCol.get(0));
-                        }
+                        int randIndex2 = getRand(1, 2);
+                        currTambolaTicket.numbers[randIndex2][colIndex] = currSetCol.remove(0);
                     }
                 }
             }
         }
-        System.out.println("After fiiling columns with 2 numbers");
-        System.out.println(currTicket);
+        System.out.println("After filling columns with 2 numbers");
+        System.out.println(currTambolaTicket);
 
         // Fill columns with 1 numbers in random position in any row (wherever possible)
         for (int colIndex = 0; colIndex < NUMBER_OF_COLUMNS; colIndex++) {
             List<Integer> currSetCol = currSet.get(colIndex);
-            Set<Integer> unique = new HashSet<>();
             if (currSetCol.size() == 1) {
-                while (true) {
-                    int randIndex = getRand(0, 2);
-                    unique.add(randIndex);
-                    if (currTicket.getRowCount(randIndex) == 5) continue;
-
-                    currTicket.numbers[randIndex][colIndex] = currSetCol.remove(0);
-                    break;
+                int randIndex = getRand(0, 2);
+                while (currTambolaTicket.getRowCount(randIndex) == 5) {
+                    randIndex = getRand(0, 2);
                 }
+                currTambolaTicket.numbers[randIndex][colIndex] = currSetCol.remove(0);
             }
         }
-        System.out.println("After fiiling columns with 1 number");
-        System.out.println(currTicket);
+        System.out.println("After filling columns with 1 number");
+        System.out.println(currTambolaTicket);
     }
 
     private static List<List<Integer>> getTicketColumns() {

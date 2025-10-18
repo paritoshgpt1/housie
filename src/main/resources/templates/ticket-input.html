@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Ticket Generator</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta charset=utf-8/>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="/assets/css/style.css"/>
+    <script type="text/javascript" src="/assets/js/script.js"></script>
+</head>
+<body>
+<h1 align="center">Housie Ticket Generator</h1>
+<div>
+    <table id="BigTable">
+        <tr th:each="ticket : ${tambolaTickets}">
+            <td>
+                <div>
+                    <table class="innerTable">
+                        <tr th:each="row : ${ticket.numbers}">
+                            <td th:each="cell : ${row}" th:classappend="${cell}!=0 ? number">
+                                <span th:text="${cell}" class="diag1" th:if="${cell}!=0"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
